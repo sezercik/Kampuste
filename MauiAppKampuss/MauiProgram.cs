@@ -13,7 +13,11 @@ namespace MauiAppKampuss
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
+            // HttpClient'i DI sistemine kaydet
+            //builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri("https://api.yourservice.com") });
 
+            // Servisi kaydet
+            //builder.Services.AddTransient<YourApiService>();
             builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
