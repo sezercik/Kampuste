@@ -1,0 +1,23 @@
+﻿<!-- TabBar.razor -->
+@inject NavigationManager Navigation
+
+<div class="tab-bar">
+    <button class="tab-button" @onclick="AkisaGit"><i class="fa fa-home"></i> Ana Sayfa </button>
+    <button class="tab-button" @onclick="PaylasaGit"><i class="fa fa-plus"></i> Ekle </button>
+    <button class="tab-button" @onclick="ArayaGit"><i class="fa fa-search"></i> Ara </button>
+</div>
+
+@code {
+    private void AkisaGit()
+    {
+        Navigation.NavigateTo("/akis");
+    }
+    private void PaylasaGit()
+    {
+        Navigation.NavigateTo("/paylas");
+    }
+    private void ArayaGit()
+    {
+        Navigation.NavigateTo("/ara");
+    }
+}
