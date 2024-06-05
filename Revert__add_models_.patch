@@ -1,0 +1,243 @@
+Subject: [PATCH] Revert "add models"
+---
+Index: src/Kampus.Application.Contracts/ICurrentUserService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Kampus.Application.Contracts/ICurrentUserService.cs b/src/Kampus.Application.Contracts/ICurrentUserService.cs
+new file mode 100644
+--- /dev/null	(revision f94553937293146734fca9857934f9e048be0065)
++++ b/src/Kampus.Application.Contracts/ICurrentUserService.cs	(revision f94553937293146734fca9857934f9e048be0065)
+@@ -0,0 +1,11 @@
++using System;
++using System.Collections.Generic;
++using System.Text;
++
++namespace Kampus
++{
++    public interface ICurrentUserService
++    {
++        bool IsAuthenticated { get; }
++    }
++}
+Index: src/Kampus.Application.Contracts/IDenemeService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Kampus.Application.Contracts/IDenemeService.cs b/src/Kampus.Application.Contracts/IDenemeService.cs
+new file mode 100644
+--- /dev/null	(revision f94553937293146734fca9857934f9e048be0065)
++++ b/src/Kampus.Application.Contracts/IDenemeService.cs	(revision f94553937293146734fca9857934f9e048be0065)
+@@ -0,0 +1,17 @@
++//using System;
++//using System.Collections.Generic;
++//using System.Text;
++//using Volo.Abp.Application.Services;
++//using Volo.Abp.Users;
++
++//namespace Kampus
++//{
++//    public interface IDenemeService : IApplicationService
++//    {
++        
++//        public string GetCurrentUserName(ICurrentUser currentUser)
++//        {
++//            return currentUser
++//        }
++//    }
++//}
+Index: src/Kampus.Application/CurrentUserAppService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Kampus.Application/CurrentUserAppService.cs b/src/Kampus.Application/CurrentUserAppService.cs
+--- a/src/Kampus.Application/CurrentUserAppService.cs	(revision 3c0ac0bc3a267f684b7e433576fc8e36c4fafba3)
++++ b/src/Kampus.Application/CurrentUserAppService.cs	(revision f94553937293146734fca9857934f9e048be0065)
+@@ -1,10 +1,17 @@
+ using Kampus.Users;
++using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Text;
++using System.Threading.Tasks;
+ using Volo.Abp.Application.Services;
++using Volo.Abp.Identity;
+ 
+ namespace Kampus
+ {
+     public class CurrentUserAppService : ApplicationService
+     {
++
+         public bool CheckUserAuthentication()
+         {
+             return CurrentUser.IsAuthenticated;
+Index: src/Kampus.Application/CurrentUserService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Kampus.Application/CurrentUserService.cs b/src/Kampus.Application/CurrentUserService.cs
+new file mode 100644
+--- /dev/null	(revision f94553937293146734fca9857934f9e048be0065)
++++ b/src/Kampus.Application/CurrentUserService.cs	(revision f94553937293146734fca9857934f9e048be0065)
+@@ -0,0 +1,64 @@
++using Kampus.Users;
++using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Security.Claims;
++using System.Text;
++using System.Threading.Tasks;
++using Volo.Abp.DependencyInjection;
++using Volo.Abp.Identity;
++using Volo.Abp.Users;
++
++namespace Kampus
++{
++    public class CurrentUserService : ICurrentUserService, ITransientDependency
++    {
++        private readonly ICurrentUser _currentUser;
++
++        public CurrentUserService(ICurrentUser currentUser)
++        {
++            _currentUser = currentUser;
++        }
++
++        public bool IsAuthenticated => _currentUser.IsAuthenticated;
++
++        public Claim? FindClaimOfCurrentUser(string claimType)
++        {
++            return _currentUser.FindClaim(claimType);
++        }
++        public Claim[] FindClaimsOfCurrentUser(string claimType)
++        {
++            return _currentUser.FindClaims(claimType);
++        }
++        public Claim[] GetAllClaimsOfCurrentUser()
++        {
++            return _currentUser.GetAllClaims();
++        }
++
++        public bool IsCurrentUserInRole(string roleName)
++        {
++            return _currentUser.IsInRole(roleName);
++        }
++
++        public CurrentUsersDetailsDto CurrentUserWithDetails()
++        {
++            CurrentUsersDetailsDto userWithRoleDto = new CurrentUsersDetailsDto();
++            userWithRoleDto.IsAuthenticated = _currentUser.IsAuthenticated;
++            userWithRoleDto.Id = _currentUser.Id;
++            userWithRoleDto.Email = _currentUser.Email;
++            userWithRoleDto.EmailVerified = _currentUser.EmailVerified;
++            userWithRoleDto.Name = _currentUser.Name;
++            userWithRoleDto.UserName = _currentUser.UserName;
++            userWithRoleDto.SurName = _currentUser.SurName;
++            userWithRoleDto.PhoneNumber = _currentUser.PhoneNumber;
++            userWithRoleDto.PhoneNumberVerified = _currentUser.PhoneNumberVerified;
++            userWithRoleDto.TenantId = _currentUser.TenantId;
++            userWithRoleDto.Roles = _currentUser.Roles;
++
++            return userWithRoleDto;
++    }
++        
++
++    }
++    
++}
+\ No newline at end of file
+Index: src/Kampus.Domain/Departments/Department.cs
+===================================================================
+diff --git a/src/Kampus.Domain/Departments/Department.cs b/src/Kampus.Domain/Departments/Department.cs
+deleted file mode 100644
+--- a/src/Kampus.Domain/Departments/Department.cs	(revision 3c0ac0bc3a267f684b7e433576fc8e36c4fafba3)
++++ /dev/null	(revision 3c0ac0bc3a267f684b7e433576fc8e36c4fafba3)
+@@ -1,9 +0,0 @@
+-using System;
+-using Volo.Abp.Domain.Entities.Auditing;
+-
+-namespace Kampus.Departments;
+-
+-public class Department : FullAuditedAggregateRoot<Guid>
+-{
+-    public string Name { get; set; }
+-}
+\ No newline at end of file
+Index: src/Kampus.Domain/Faculties/Faculty.cs
+===================================================================
+diff --git a/src/Kampus.Domain/Faculties/Faculty.cs b/src/Kampus.Domain/Faculties/Faculty.cs
+deleted file mode 100644
+--- a/src/Kampus.Domain/Faculties/Faculty.cs	(revision 3c0ac0bc3a267f684b7e433576fc8e36c4fafba3)
++++ /dev/null	(revision 3c0ac0bc3a267f684b7e433576fc8e36c4fafba3)
+@@ -1,9 +0,0 @@
+-using System;
+-using Volo.Abp.Domain.Entities.Auditing;
+-
+-namespace Kampus.Faculties;
+-
+-public class Faculty : FullAuditedAggregateRoot<Guid>
+-{
+-    public string Name { get; set; }
+-}
+\ No newline at end of file
+Index: src/Kampus.Domain/Grades/Grade.cs
+===================================================================
+diff --git a/src/Kampus.Domain/Grades/Grade.cs b/src/Kampus.Domain/Grades/Grade.cs
+deleted file mode 100644
+--- a/src/Kampus.Domain/Grades/Grade.cs	(revision 3c0ac0bc3a267f684b7e433576fc8e36c4fafba3)
++++ /dev/null	(revision 3c0ac0bc3a267f684b7e433576fc8e36c4fafba3)
+@@ -1,9 +0,0 @@
+-using System;
+-using Volo.Abp.Domain.Entities.Auditing;
+-
+-namespace Kampus.Grades;
+-
+-public class Grade : FullAuditedAggregateRoot<Guid>
+-{
+-    public string Name { get; set; }
+-}
+\ No newline at end of file
+Index: src/Kampus.Domain/Students/Student.cs
+===================================================================
+diff --git a/src/Kampus.Domain/Students/Student.cs b/src/Kampus.Domain/Students/Student.cs
+deleted file mode 100644
+--- a/src/Kampus.Domain/Students/Student.cs	(revision 3c0ac0bc3a267f684b7e433576fc8e36c4fafba3)
++++ /dev/null	(revision 3c0ac0bc3a267f684b7e433576fc8e36c4fafba3)
+@@ -1,16 +0,0 @@
+-using System;
+-using Volo.Abp.Identity;
+-
+-namespace Kampus.Students;
+-
+-public class Student : IdentityUser
+-{
+-    public string TCKimlikNo { get; set; }
+-    public string UniversityEmail { get; set; }
+-    public DateTime BirthDate { get; set; }
+-    // public Guid FacultyId { get;  set; }
+-    // public Guid DepartmentId { get;  set; }
+-    // public Guid GradeId { get;  set; }
+-    // public Guid UniversityId { get;  set; }
+-    // public string BlobName { get;  set; }
+-}
+\ No newline at end of file
+Index: src/Kampus.Domain/Universities/University.cs
+===================================================================
+diff --git a/src/Kampus.Domain/Universities/University.cs b/src/Kampus.Domain/Universities/University.cs
+deleted file mode 100644
+--- a/src/Kampus.Domain/Universities/University.cs	(revision 3c0ac0bc3a267f684b7e433576fc8e36c4fafba3)
++++ /dev/null	(revision 3c0ac0bc3a267f684b7e433576fc8e36c4fafba3)
+@@ -1,9 +0,0 @@
+-using System;
+-using Volo.Abp.Domain.Entities.Auditing;
+-
+-namespace Kampus.Universities;
+-
+-public class University : FullAuditedAggregateRoot<Guid>
+-{
+-    public string Name { get; set; }
+-}
+\ No newline at end of file

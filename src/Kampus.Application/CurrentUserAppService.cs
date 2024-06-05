@@ -1,17 +1,10 @@
 ﻿using Kampus.Users;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Identity;
 
 namespace Kampus
 {
     public class CurrentUserAppService : ApplicationService
     {
-
         public bool CheckUserAuthentication()
         {
             return CurrentUser.IsAuthenticated;
