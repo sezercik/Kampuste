@@ -83,7 +83,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\Kampus.HttpApi.Client\Kampus.HttpApi.Client.csproj" />
+      <ProjectReference Include=".\src\Kampus.HttpApi.Client\Kampus.HttpApi.Client.csproj" />
     </ItemGroup>
 
 </Project>
