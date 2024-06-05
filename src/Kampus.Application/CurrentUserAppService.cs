@@ -12,11 +12,6 @@ namespace Kampus
     public class CurrentUserAppService : ApplicationService
     {
 
-        //public CurrentUserAppService(ICurrentUserService currentUserService)
-        //{
-        //    _currentUserService = currentUserService;
-        //}
-
         public bool CheckUserAuthentication()
         {
             return CurrentUser.IsAuthenticated;

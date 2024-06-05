@@ -20,12 +20,6 @@ namespace Kampuste.Maui
         {
             var builder = MauiApp.CreateBuilder();
 
-            //var a = Assembly.GetExecutingAssembly();
-            //using var stream = a.GetManifestResourceStream("Kampuste.Maui.appsettings.json");
-            //var config = new ConfigurationBuilder()
-            //    .AddJsonStream(stream)
-            //    .Build();
-            //builder.Configuration.AddConfiguration(config);
 
             builder
                 .UseMauiApp<App>()
@@ -48,31 +42,13 @@ namespace Kampuste.Maui
 #endif
 
 
-            //builder.Services.AddSingleton<IConfiguration>(config);
-            //builder.Services.AddSingleton<IOpenIddictService, OpenIddictService>();
-            //builder.Services.AddSingleton<ISecureStorage, StorageService>();
-            //builder.Services.AddTransient<WebAuthenticatorBrowser>();
-            //builder.Services.AddSingleton<ICurrentUser, CurrentUser>();
-            //builder.Services.AddSingleton<ICurrentUser, UserService>();
-
-            //builder.Services.ICurrentPrincipalAccessor
-            //builder.Services.AddTransient<OidcClient>(OpenIddictService.);
             var app = builder.Build();
 
             app.Services.GetRequiredService<IAbpApplicationWithExternalServiceProvider>().Initialize(app.Services);
             var assembly = typeof(App).GetTypeInfo().Assembly;
             builder.Configuration.AddJsonFile(new EmbeddedFileProvider(assembly), "appsettings.json", optional: false, false);
             return app;
-            //return builder.Build();
         }
-        //public static HttpClient GetHttpClient()
-        //{
-        //    var devSslHelper = new DevHttpsConnectionHelper();
-        //    devSslHelper.HttpClient.Timeout = TimeSpan.FromSeconds(60);
-        //    return devSslHelper.HttpClient;
-        //}
-
-
 
     }
 }

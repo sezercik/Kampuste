@@ -26,7 +26,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // userInfo = await UserService.CheckUserAuthenticationAsync();
         isAuthenticated = await UserService.CheckUserAuthenticationAsync();
         if (!isAuthenticated)
         {
