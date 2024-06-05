@@ -1,0 +1,41 @@
+﻿@page "/profilim"
+
+@using Kampuste.Maui.Services.User
+@inject UserService UserService
+@inject NavigationManager NavigationManager
+
+<h3>User Info</h3>
+
+@if (isAuthenticated)
+{
+    <div>
+        <p>User ID: @userInfo.Id</p>
+        <p>User Name: @userInfo.UserName</p>
+        <p>Email: @userInfo.Email</p>
+        <p>Phone Number: @userInfo.PhoneNumber</p>
+    </div>
+}
+else
+{
+    <div>Logging out...</div>
+}
+
+@code {
+    private bool isAuthenticated;
+    private CurrentUsersDetailsDto userInfo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // userInfo = await UserService.CheckUserAuthenticationAsync();
+        isAuthenticated = await UserService.CheckUserAuthenticationAsync();
+        if (!isAuthenticated)
+        {
+            // Redirect to the login page or home page after logout
+            NavigationManager.NavigateTo("/", true);
+        }
+        else
+        {
+            userInfo = await UserService.CurrentUserDetails();
+        }
+    }
+}
