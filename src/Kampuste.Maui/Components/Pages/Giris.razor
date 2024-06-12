@@ -1,0 +1,96 @@
+﻿@page "/signin"
+@using Services.OpenIddict
+@inject NavigationManager Navigation
+@inject IOpenIddictService OpenIddictService
+<div class="container">
+    <div class="row">
+        <img src="images/llogo.png" height="250px" width="250px" alt="My Image" />
+        <div class="col-md-4 offset-md-4">
+
+            <h2>Hoşgeldinizz</h2>
+            <form>
+                @* <div class="form-group">
+                    <label for="email">E-posta</label>
+                    <input type="email" id="email" class="form-control" @oninput="UpdateEmail" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Şifre</label>
+                    <input type="password" id="password" class="form-control" @oninput="UpdatePassword" />
+                </div>
+                <div class="form-group">
+                    <a href="#" @onclick="ForgotPassword">Şifremi unuttum</a>
+                </div> *@
+                <button type="submit" class="btn btn-primary" @onclick="ExecuteLoginAsync">Giriş Yap</button>
+                @* <button type="button" class="btn btn-secondary" @onclick="SignUp">Kayıt Ol</button> *@
+            </form>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private bool isVisible = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (await OpenIddictService.IsUserLoggedInAsync())
+        {
+            Navigation.NavigateTo("/", true);
+        }
+    }
+
+    private async Task ExecuteLoginAsync()
+    {
+        isVisible = false;
+        if (await OpenIddictService.AuthenticationSuccessful())
+        {
+            isVisible = true;
+            if (await OpenIddictService.IsUserLoggedInAsync())
+            {
+                Navigation.NavigateTo("/", true);
+            }
+            else
+            {
+                await OpenIddictService.LogoutAsync();
+                Navigation.NavigateTo("/login", true);
+            }
+        }
+        else
+        {
+            Navigation.NavigateTo("/login", true);
+            isVisible = true;
+        }
+    }
+
+    // private string email = "";
+    // private string password = "";
+
+    // private void UpdateEmail(ChangeEventArgs e)
+    // {
+    //     email = (e.Value as string)?.Trim();
+    // }
+
+    // private void UpdatePassword(ChangeEventArgs e)
+    // {
+    //     password = (e.Value as string)?.Trim();
+    // }
+
+    // private async Task SignIn()
+    // {
+    //     // Implement sign-in logic here
+    //     Console.WriteLine("Sign in clicked");
+    // }
+
+    // private async Task SignUp()
+    // {
+    //     // Implement sign-up logic here
+    //     Console.WriteLine("Sign up clicked");
+    // }
+
+    // private async Task ForgotPassword()
+    // {
+    //     // Implement forgot password logic here
+    //     Console.WriteLine("Forgot password clicked");
+    // }
+
+}

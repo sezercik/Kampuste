@@ -1,0 +1,66 @@
+﻿@page "/akis"
+@inject NavigationManager Navigation
+
+<div class="content">
+    <div class="tab-bar2">
+        <button class="tab-button2" @onclick="ProfileGit"><i class="fa fa-user" aria-hidden="true"></i></button>
+        <button class="tab-button2">Genel</button>
+        <button class="tab-button2">Üniversite</button>
+        <button class="tab-button2">Bölüm</button>
+        <button class="tab-button2" @onclick="MesajlaraGit"><i class="fa fa-envelope" aria-hidden="true"></i></button>
+    </div>
+    <div>
+        <div class="posts">
+        <!-- Kullanıcı Gönderisi -->
+        @foreach (var post in posts)
+        {
+            <div class="post">
+                <div class="post-header">
+                    <img src="https://via.placeholder.com/50" alt="Profil Fotoğrafı" class="user-photo" />
+                    <span class="username">@post.Username</span>
+                    <span class="post-date">@post.PostDate.ToString("dd MMMM yyyy")</span>
+                </div>
+                <div class="post-content">
+                    @if (!string.IsNullOrEmpty(post.ImageUrl))
+                    {
+                        <img src="@post.ImageUrl" alt="Resim" />
+                    }
+                    <p>@post.Content</p>
+                </div>
+                <div class="post-actions">
+                    <button class="action-button"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                    <button class="action-button"><i class="fa fa-comment" aria-hidden="true"></i></button>
+                    <button class="action-button"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Post> posts = new List<Post>
+    {
+        new Post { Username = "Kullanıcı Adı", PostDate = DateTime.Now.AddDays(-3), Content = "Bu bir gönderi örneğidir. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
+        new Post { Username = "Kullanıcı Adı", PostDate = DateTime.Now.AddDays(-2), Content = "Bu bir resimli gönderi örneğidir. Lorem ipsum dolor sit amet, consectetur adipiscing elit.", ImageUrl = "https://via.placeholder.com/200" },
+        new Post { Username = "Kullanıcı Adı", PostDate = DateTime.Now.AddDays(-1), Content = "Bu bir resimli gönderi örneğidir. Lorem ipsum dolor sit amet, consectetur adipiscing elit.", ImageUrl = "https://via.placeholder.com/200" },
+    };
+
+    private void ProfileGit()
+    {
+        Navigation.NavigateTo("/profil");
+    }
+
+    private void MesajlaraGit()
+    {
+        Navigation.NavigateTo("/mesaj");
+    }
+
+    public class Post
+    {
+        public string Username { get; set; }
+        public DateTime PostDate { get; set; }
+        public string Content { get; set; }
+        public string ImageUrl { get; set; }
+    }
+}

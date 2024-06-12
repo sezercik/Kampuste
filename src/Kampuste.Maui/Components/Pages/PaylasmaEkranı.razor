@@ -1,0 +1,24 @@
+﻿@page "/paylas"
+@inject NavigationManager Navigation
+
+<div class="content">
+    <div class="header">
+        <button class="back-button" @onclick="AkisaGit"><i class="fa fa-arrow-left"></i></button>
+
+        <button class="share-button">Paylaş</button>
+    </div>
+    <div class="share-form">
+        <textarea class="share-textarea" placeholder="Buraya yazın..."></textarea>
+        <div class="custom-file-input-wrapper">
+            <input type="file" accept="image/*" class="custom-file-input" />
+            <label for="file-input">Resim Yükle</label>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void AkisaGit()
+    {
+        Navigation.NavigateTo("/akis");
+    }
+}
