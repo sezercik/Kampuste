@@ -1,42 +1,23 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">last.Maui</a>
-    </div>
+﻿<!-- TabBar.razor -->
+@inject NavigationManager Navigation
+
+<div class="tab-bar">
+    <button class="tab-button" @onclick="AkisaGit"><i class="fa fa-home"></i></button>
+    <button class="tab-button" @onclick="PaylasaGit"><i class="fa fa-plus"></i></button>
+    <button class="tab-button" @onclick="ArayaGit"><i class="fa fa-search"></i></button>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="login">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> login
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="user">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> cikis
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="profilim">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> profil
-            </NavLink>
-        </div>
-    </nav>
-</div>
+@code {
+    private void AkisaGit()
+    {
+        Navigation.NavigateTo("/akis");
+    }
+    private void PaylasaGit()
+    {
+        Navigation.NavigateTo("/paylas");
+    }
+    private void ArayaGit()
+    {
+        Navigation.NavigateTo("/signin");
+    }
+}

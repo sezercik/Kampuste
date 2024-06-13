@@ -1,17 +1,39 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
 
-<div class="page">
-    <div class="sidebar">
+
+    <div class="content">
+        <div class="main">
+        @Body
+        
+
+   @if (ShowNavMenu)
+   {
+    <footer class="footer">
         <NavMenu />
-    </div>
+    </footer>
+   }
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+   </div>
 </div>
+
+@code 
+{
+    private bool ShowNavMenu;
+
+    protected override void OnParametersSet()
+    {
+        var showNavMenuPages = new List<string> { "/akis", "/profil", "/"};
+        var currentUri = Navigation.Uri.ToLower();
+        ShowNavMenu = showNavMenuPages.Any(page => currentUri.EndsWith(page));
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("adjustContentHeight");
+        }
+    }
+}

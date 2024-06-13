@@ -1,0 +1,161 @@
+﻿@page "/profil"
+@inject NavigationManager Navigation
+
+<div class="content">
+    <!-- Üst Kısım: Geri Butonu ve Ayarlar İkonu -->
+    <div class="header">
+        <button class="back-button" @onclick="AkisaGit"><i class="fa fa-arrow-left"></i></button>
+        <button class="settings-button" @onclick="AyarlaraGit"><i class="fa fa-cog"></i></button>
+    </div>
+
+    <!-- Profil Bilgileri -->
+    <div class="profile-info">
+        <img src="https://via.placeholder.com/150" alt="Profil Fotoğrafı" class="profile-photo" />
+        <h2>Kullanıcı Adı</h2>
+        <p class="bio">Bu bir bio örneğidir. Kısa bir açıklama buraya gelecek.</p>
+    </div>
+
+    <!-- Seçim Kısmı -->
+    <div class="tabs">
+        <button class="tab-button3" @onclick="ShowPosts">Gönderiler</button>
+        <button class="tab-button3" @onclick="ShowMedia">Medya</button>
+        <button class="tab-button3" @onclick="ShowPins">Kaydedilenler</button>
+    </div>
+
+    <!-- İçerik Kısmı -->
+    <div class="content">
+        @if (showPosts)
+        {
+            <div class="posts">
+                <!-- Kullanıcı Gönderisi -->
+                @foreach (var post in posts)
+                {
+                    <div class="post">
+                        <div class="post-header">
+                            <span class="username">@post.Username</span>
+                            <span class="post-date">@post.PostDate.ToString("dd MMMM yyyy")</span>
+                        </div>
+                        <div class="post-content">
+                            @if (!string.IsNullOrEmpty(post.ImageUrl))
+                            {
+                                <img src="@post.ImageUrl" alt="Resim" />
+                            }
+                            <p>@post.Content</p>
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-button"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                            <button class="action-button"><i class="fa fa-comment" aria-hidden="true"></i></button>
+                            <button class="action-button"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else if (showMedia)
+        {
+            <div class="posts">
+                <!-- Kullanıcı Gönderisi -->
+                @foreach (var post in posts)
+                {
+                    <div class="post">
+                        <div class="post-header">
+                            <span class="username">@post.Username</span>
+                            <span class="post-date">@post.PostDate.ToString("dd MMMM yyyy")</span>
+                        </div>
+                        <div class="post-content">
+                            @if (!string.IsNullOrEmpty(post.ImageUrl))
+                            {
+                                <img src="@post.ImageUrl" alt="Resim" />
+                            }
+                            <p>@post.Content</p>
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-button"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                            <button class="action-button"><i class="fa fa-comment" aria-hidden="true"></i></button>
+                            <button class="action-button"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else if (showPins)
+        {
+            <div class="posts">
+                <!-- Kullanıcı Gönderisi -->
+                @foreach (var post in posts)
+                {
+                    <div class="post">
+                        <div class="post-header">
+                            <span class="username">@post.Username</span>
+                            <span class="post-date">@post.PostDate.ToString("dd MMMM yyyy")</span>
+                        </div>
+                        <div class="post-content">
+                            @if (!string.IsNullOrEmpty(post.ImageUrl))
+                            {
+                                <img src="@post.ImageUrl" alt="Resim" />
+                            }
+                            <p>@post.Content</p>
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-button"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                            <button class="action-button"><i class="fa fa-comment" aria-hidden="true"></i></button>
+                            <button class="action-button"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private bool showPosts = true;
+    private bool showMedia = false;
+    private bool showPins = false;
+
+    private void ShowPins()
+    {
+        showPins = true;
+        showPosts = false;
+        showMedia = false;
+    }
+
+    private void ShowPosts()
+    {
+        showPosts = true;
+        showMedia = false;
+        showPins = false;
+    }
+
+    private void ShowMedia()
+    {
+        showPosts = false;
+        showMedia = true;
+        showPins = false;
+    }
+
+    private void AkisaGit()
+    {
+        Navigation.NavigateTo("/akis");
+    }
+
+    private void AyarlaraGit()
+    {
+        Navigation.NavigateTo("/ayarlar");
+    }
+
+    private List<Post> posts = new List<Post>
+    {
+        new Post { Username = "Kullanıcı Adı", PostDate = DateTime.Now.AddDays(-3), Content = "Bu bir gönderi örneğidir. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
+        new Post { Username = "Kullanıcı Adı", PostDate = DateTime.Now.AddDays(-2), Content = "Bu bir resimli gönderi örneğidir. Lorem ipsum dolor sit amet, consectetur adipiscing elit.", ImageUrl = "https://via.placeholder.com/200" },
+        new Post { Username = "Kullanıcı Adı", PostDate = DateTime.Now.AddDays(-1), Content = "Bu bir resimli gönderi örneğidir. Lorem ipsum dolor sit amet, consectetur adipiscing elit.", ImageUrl = "https://via.placeholder.com/200" },
+    };
+
+    public class Post
+    {
+        public string Username { get; set; }
+        public DateTime PostDate { get; set; }
+        public string Content { get; set; }
+        public string ImageUrl { get; set; }
+    }
+}

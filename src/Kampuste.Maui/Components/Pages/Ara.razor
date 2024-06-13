@@ -1,0 +1,20 @@
+﻿@page "/ara"
+@inject NavigationManager Navigation
+
+<div class="content">
+    <div class="search-form">
+    <button class="back-button" @onclick="GoBack"><i class="fa fa-arrow-left"></i></button>
+    <input type="text" placeholder="Ara..." class="search-input" />
+    <button class="search-button">Ara</button>
+    </div>
+<!-- Arama Sonuçları -->
+    <div>
+    </div>
+</div>
+
+@code {
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/akis");
+    }
+}
