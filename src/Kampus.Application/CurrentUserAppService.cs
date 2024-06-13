@@ -10,6 +10,7 @@ namespace Kampus
             return CurrentUser.IsAuthenticated;
         }
 
+      
         public CurrentUsersDetailsDto CurrentUserWithDetails()
         {
 

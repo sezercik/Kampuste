@@ -1,6 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using Kampus.Users;
+using Microsoft.Extensions.Options;
 using Volo.Abp.Identity;
 using Volo.Abp.ObjectExtending;
+using Volo.Abp.ObjectExtending.Modularity;
 using Volo.Abp.Threading;
 
 namespace Kampus;
@@ -69,5 +73,45 @@ public static class KampusModuleExtensionConfigurator
          * See the documentation for more:
          * https://docs.abp.io/en/abp/latest/Module-Entity-Extensions
          */
+
+        ObjectExtensionManager.Instance.Modules()
+                      .ConfigureIdentity(identity =>
+                      {
+                          identity.ConfigureUser(user =>
+                          {
+                              user.AddOrUpdateProperty<string>( //property type: string
+                                  UserConsts.TcKimlikNoPropertyName, //property name
+                                  property =>
+                                  {
+                                      property.Attributes.Add(new RequiredAttribute());
+                                      property.Attributes.Add(new StringLengthAttribute(UserConsts.MaxTcKimlikNoLength) {MinimumLength = 11});
+                                      // property.Configuration[IdentityModuleExtensionConsts.ConfigurationNames.AllowUserToEdit] = true;
+                                      property.Api.OnCreate.IsAvailable = true;
+                                      property.Api.OnGet.IsAvailable = true;
+                                      
+                                      
+                                  }
+                              );
+                              
+                              user.AddOrUpdateProperty<string>( //property type: string
+                                  UserConsts.UniversityEmailPropertyName, //property name
+                                  property =>
+                                  {
+                                      property.Attributes.Add(new StringLengthAttribute(UserConsts.MaxUniversityEmailLength) {MinimumLength = 5});
+                                      // property.Configuration[IdentityModuleExtensionConsts.ConfigurationNames.AllowUserToEdit] = true;
+                                  }
+                              );
+                              user.AddOrUpdateProperty<DateTime>( //property type: string
+                                  UserConsts.BirthDatePropertyName, //property name
+                                  property =>
+                                  {
+                                      property.Attributes.Add(new RequiredAttribute());
+                                      // property.Configuration[IdentityModuleExtensionConsts.ConfigurationNames.AllowUserToEdit] = true;
+                                  }
+                              );
+                              
+                          });
+                      });
+
     }
 }

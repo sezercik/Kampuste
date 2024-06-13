@@ -1,4 +1,9 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
+using Kampus.Users;
+using Volo.Abp.Account;
+using Volo.Abp.Data;
+using Volo.Abp.Identity;
 
 namespace Kampus;
 
@@ -9,6 +14,42 @@ public class KampusApplicationAutoMapperProfile : Profile
         /* You can configure your AutoMapper mapping configuration here.
          * Alternatively, you can split your mapping configurations
          * into multiple profile classes for a better organization. */
+        // CreateMap<Book, BookDto>();
+        // CreateMap<CreateUpdateBookDto, Book>();
+        // typeof(IdentityUserDto),
+        //                         typeof(ProfileDto),
+        //                         typeof(UserData),
+        //                         typeof(UpdateProfileDto),
+        //                         typeof(RegisterDto),
+        //                         typeof(IdentityUserCreateDto),
+        //                         typeof(IdentityUserUpdateDto)
+        //
+        // context.MapperConfiguration.CreateMap<ProfileDto, CustomProfileDto>();
+        // context.MapperConfiguration.CreateMap<UpdateProfileDto, CustomProfileDto>();
+        // context.MapperConfiguration.CreateMap<IdentityUserCreateOrUpdateDtoBase, CustomProfileDto>();
+
+        CreateMap<UpdateProfileDto, CustomUpdateProfileDto>()
+            .ForMember(dest => dest.TcKimlikNo, opt => opt.MapFrom(src => src.GetProperty<string>("TcKimlikNo","1111111111")))
+            .ForMember(dest => dest.UniversityEmail, opt => opt.MapFrom(src => src.GetProperty<string>("UniversityEmail","girilmedi@none.edu.tr")))
+            .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.GetProperty<DateTime?>("BirthDate",DateTime.Today))); // Nullable DateTime
+        CreateMap<IdentityUserCreateOrUpdateDtoBase, CustomIdentityUserCreateOrUpdateDtoBase>()
+            .ForMember(dest => dest.TcKimlikNo, opt => opt.MapFrom(src => src.GetProperty<string>("TcKimlikNo","1111111111")))
+            .ForMember(dest => dest.UniversityEmail, opt => opt.MapFrom(src => src.GetProperty<string>("UniversityEmail","girilmedi@none.edu.tr")))
+            .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.GetProperty<DateTime?>("BirthDate",DateTime.Today))); // Nullable DateTime
+        CreateMap<ProfileDto, CustomProfileDto>()
+            .ForMember(dest => dest.TcKimlikNo, opt => opt.MapFrom(src => src.GetProperty<string>("TcKimlikNo","1111111111")))
+            .ForMember(dest => dest.UniversityEmail, opt => opt.MapFrom(src => src.GetProperty<string>("UniversityEmail","girilmedi@none.edu.tr")))
+            .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.GetProperty<DateTime?>("BirthDate",DateTime.Today))); // Nullable DateTime
+
+        CreateMap<IdentityUserDto, CustomIdentityUserDto>()
+            .ForMember(dest => dest.TcKimlikNo, opt => opt.MapFrom(src => src.GetProperty<string>("TcKimlikNo","1111111111")))
+            .ForMember(dest => dest.UniversityEmail, opt => opt.MapFrom(src => src.GetProperty<string>("UniversityEmail","girilmedi@none.edu.tr")))
+            .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.GetProperty<DateTime?>("BirthDate",DateTime.Today))); // Nullable DateTime
+
+        CreateMap<RegisterDto, CustomRegisterDto>()
+            .ForMember(dest => dest.TcKimlikNo, opt => opt.MapFrom(src => src.GetProperty<string>("TcKimlikNo","1111111111")))
+            .ForMember(dest => dest.UniversityEmail, opt => opt.MapFrom(src => src.GetProperty<string>("UniversityEmail","girilmedi@none.edu.tr")))
+            .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.GetProperty<DateTime?>("BirthDate",DateTime.Today))); // Nullable DateTime
 
     }
 }

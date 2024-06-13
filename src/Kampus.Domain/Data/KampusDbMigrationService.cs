@@ -103,6 +103,9 @@ public class KampusDbMigrationService : ITransientDependency
         await _dataSeeder.SeedAsync(new DataSeedContext(tenant?.Id)
             .WithProperty(IdentityDataSeedContributor.AdminEmailPropertyName, IdentityDataSeedContributor.AdminEmailDefaultValue)
             .WithProperty(IdentityDataSeedContributor.AdminPasswordPropertyName, IdentityDataSeedContributor.AdminPasswordDefaultValue)
+            .WithProperty("TcKimlikNo", "11111111111")
+            .WithProperty("UniversityEmail","")
+            .WithProperty("BirthDate", DateTime.Today)
         );
     }
 
