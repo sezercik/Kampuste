@@ -47,17 +47,17 @@
             isVisible = true;
             if (await OpenIddictService.IsUserLoggedInAsync())
             {
-                Navigation.NavigateTo("/", true);
+                Navigation.NavigateTo("/akis", true);
             }
             else
             {
                 await OpenIddictService.LogoutAsync();
-                Navigation.NavigateTo("/login", true);
+                Navigation.NavigateTo("/signin", true);
             }
         }
         else
         {
-            Navigation.NavigateTo("/login", true);
+            Navigation.NavigateTo("/signin", true);
             isVisible = true;
         }
     }
