@@ -1,4 +1,4 @@
-﻿using Kampus.Departments;
+using Kampus.Departments;
 using Kampus.Grades;
 using Kampus.Universities;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +16,7 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 
 namespace Kampus.EntityFrameworkCore;
 
@@ -31,6 +32,8 @@ public class KampusDbContext :
     public DbSet<Department> Departments { get; set; }
     public DbSet<University> Universities { get; set; }
     public DbSet<Grade> Grades { get; set; }
+    
+    public DbSet<UserSettings.UserSetting> UserSettings { get; set; }
     #region Entities from the modules
 
     /* Notice: We only implemented IIdentityDbContext and ITenantManagementDbContext
@@ -112,6 +115,32 @@ public class KampusDbContext :
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
         });
       
+        // builder.Entity<UserSettings.UserSettings>(b =>
+        // {
+        //     b.ToTable("AppUserSettings");
+        //     b.HasKey(us => us.Id);
+        //
+        //     b.HasOne(us => us.User)
+        //         .WithOne()
+        //         .HasForeignKey<UserSettings.UserSettings>(us => us.UserId)
+        //         .IsRequired();
+        //
+        //     b.ConfigureByConvention();
+        // });
         
-    }
+        builder.Entity<UserSettings.UserSetting>(b =>
+        {
+            b.ToTable("AppUserSettings");
+            b.ConfigureByConvention();
+            b.HasOne<IdentityUser>().WithOne().HasForeignKey<UserSettings.UserSetting>(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+        });
+        
+        builder.Entity<IdentityUser>(b =>
+        {
+            b.HasOne<UserSettings.UserSetting>()
+                .WithOne(us => us.User)
+                .HasForeignKey<UserSettings.UserSetting>(us => us.UserId);
+        });
+        builder.ConfigureBlobStoring();
+        }
 }
