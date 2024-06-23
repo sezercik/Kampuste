@@ -9,5 +9,5 @@ public class Post :  FullAuditedAggregateRoot<Guid>
     public virtual Guid UserId { get; protected set; }
         public virtual IdentityUser User { get; protected set; }
     
-    //TODO: first implement the file upload system
+    //TODO: add blobstorage name too
 }
