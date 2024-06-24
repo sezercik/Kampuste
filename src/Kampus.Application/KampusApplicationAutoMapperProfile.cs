@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using Kampus.Posts;
 using Kampus.Users;
 using Kampus.UserSettings;
 using Volo.Abp.Account;
@@ -30,6 +31,13 @@ public class KampusApplicationAutoMapperProfile : Profile
         // context.MapperConfiguration.CreateMap<IdentityUserCreateOrUpdateDtoBase, CustomProfileDto>();
 
         CreateMap<UserSettings.UserSetting, UserSettingDto>();
+        CreateMap<CreateUserSettingDto, UserSetting>();
+        CreateMap<UpdateUserSettingDto, UserSetting>();
+
+        CreateMap<Post, PostDto>();
+        CreateMap<CreatePostDto, Post>();
+        
+        
         CreateMap<UpdateProfileDto, CustomUpdateProfileDto>()
             .ForMember(dest => dest.TcKimlikNo, opt => opt.MapFrom(src => src.GetProperty<string>("TcKimlikNo","1111111111")))
             .ForMember(dest => dest.UniversityEmail, opt => opt.MapFrom(src => src.GetProperty<string>("UniversityEmail","girilmedi@none.edu.tr")))

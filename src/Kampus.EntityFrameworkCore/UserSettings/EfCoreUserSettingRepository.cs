@@ -21,7 +21,6 @@ public class EfCoreUserSettingRepository : EfCoreRepository<KampusDbContext, Kam
     {
         var dbSet = await GetDbSetAsync();
         return await dbSet.FirstOrDefaultAsync(usersettings => usersettings.UserId == userId);
-
     }
    
 }

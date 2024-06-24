@@ -7,7 +7,20 @@ namespace Kampus;
 public class Post :  FullAuditedAggregateRoot<Guid>
 {
     public virtual Guid UserId { get; protected set; }
-        public virtual IdentityUser User { get; protected set; }
+    public virtual IdentityUser User { get; protected set; }
     
-    //TODO: add blobstorage name too
+    public string Content { get; set; }
+    public string[]? BlobNames { get; set; }
+
+    protected Post()
+    {
+    }
+
+    public Post(Guid id, Guid userId, string content,string[]? blobNames=null)
+    {
+        Id = id;
+        UserId = userId;
+        Content = content;
+        BlobNames = blobNames;
+    }
 }

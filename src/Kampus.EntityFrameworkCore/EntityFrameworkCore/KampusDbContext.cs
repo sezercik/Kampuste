@@ -34,6 +34,7 @@ public class KampusDbContext :
     public DbSet<Grade> Grades { get; set; }
     
     public DbSet<UserSettings.UserSetting> UserSettings { get; set; }
+    public DbSet<Post> Posts { get; set; }
     #region Entities from the modules
 
     /* Notice: We only implemented IIdentityDbContext and ITenantManagementDbContext
@@ -115,18 +116,7 @@ public class KampusDbContext :
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
         });
       
-        // builder.Entity<UserSettings.UserSettings>(b =>
-        // {
-        //     b.ToTable("AppUserSettings");
-        //     b.HasKey(us => us.Id);
-        //
-        //     b.HasOne(us => us.User)
-        //         .WithOne()
-        //         .HasForeignKey<UserSettings.UserSettings>(us => us.UserId)
-        //         .IsRequired();
-        //
-        //     b.ConfigureByConvention();
-        // });
+     
         
         builder.Entity<UserSettings.UserSetting>(b =>
         {
@@ -134,12 +124,26 @@ public class KampusDbContext :
             b.ConfigureByConvention();
             b.HasOne<IdentityUser>().WithOne().HasForeignKey<UserSettings.UserSetting>(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
         });
+
+        builder.Entity<Post>(b =>
+        {
+            b.ToTable(KampusConsts.DbTablePrefix + "Posts",
+                KampusConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.HasOne<IdentityUser>(p => p.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserId);
+        });
         
         builder.Entity<IdentityUser>(b =>
         {
             b.HasOne<UserSettings.UserSetting>()
                 .WithOne(us => us.User)
                 .HasForeignKey<UserSettings.UserSetting>(us => us.UserId);
+
+            b.HasMany<Post>()
+                .WithOne(p => p.User)
+                .HasForeignKey(p => p.UserId);
         });
         builder.ConfigureBlobStoring();
         }
