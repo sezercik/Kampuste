@@ -17,6 +17,8 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
+using Kampus.PostsLikes;
+using Kampus.UserFollows;
 
 namespace Kampus.EntityFrameworkCore;
 
@@ -35,6 +37,7 @@ public class KampusDbContext :
     
     public DbSet<UserSettings.UserSetting> UserSettings { get; set; }
     public DbSet<Post> Posts { get; set; }
+    public DbSet<PostLike> PostLikes { get; set; }
     #region Entities from the modules
 
     /* Notice: We only implemented IIdentityDbContext and ITenantManagementDbContext
@@ -122,29 +125,98 @@ public class KampusDbContext :
         {
             b.ToTable("AppUserSettings");
             b.ConfigureByConvention();
-            b.HasOne<IdentityUser>().WithOne().HasForeignKey<UserSettings.UserSetting>(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            b.HasOne<IdentityUser>()
+                .WithOne()
+                .HasForeignKey<UserSettings.UserSetting>(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Entity<Post>(b =>
         {
             b.ToTable(KampusConsts.DbTablePrefix + "Posts",
                 KampusConsts.DbSchema);
+
             b.ConfigureByConvention();
+
             b.HasOne<IdentityUser>(p => p.User)
                 .WithMany()
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+          
+            b.HasMany<PostLike>()
+               .WithOne(p => p.Post)
+               .OnDelete(DeleteBehavior.NoAction)
+               .HasForeignKey(p => p.PostId);
+        });
+
+        builder.Entity<PostLike>(b =>
+        {
+            b.ToTable(KampusConsts.DbTablePrefix + "PostLikes", KampusConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.HasOne<Post>(p => p.Post)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired()
+                .HasForeignKey(p => p.PostId);
+                
+
+            b.HasOne<IdentityUser>(p => p.User)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired()
                 .HasForeignKey(p => p.UserId);
         });
-        
+
+        builder.Entity<UserFollow>(b =>
+        {
+            b.ToTable(KampusConsts.DbTablePrefix + "UserFollows", KampusConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.HasOne<IdentityUser>(uf => uf.Follower)
+                .WithMany()
+                .HasForeignKey(uf => uf.FollowerId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+
+            b.HasOne<IdentityUser>(uf => uf.Followee)
+                .WithMany()
+                .HasForeignKey(uf => uf.FolloweeId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+
+            b.HasQueryFilter(uf => !uf.Follower.IsDeleted && !uf.Followee.IsDeleted);
+        });
+
         builder.Entity<IdentityUser>(b =>
         {
+
             b.HasOne<UserSettings.UserSetting>()
                 .WithOne(us => us.User)
                 .HasForeignKey<UserSettings.UserSetting>(us => us.UserId);
 
             b.HasMany<Post>()
                 .WithOne(p => p.User)
+                .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => p.UserId);
+
+            b.HasMany<PostLike>()
+            .WithOne(p => p.User)
+            .OnDelete(DeleteBehavior.NoAction)
+            .HasForeignKey(p => p.UserId);
+
+            b.HasMany<UserFollow>()
+            .WithOne(uf => uf.Follower)
+            .HasForeignKey(uf => uf.FollowerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasMany<UserFollow>()
+                .WithOne(uf => uf.Followee)
+                .HasForeignKey(uf => uf.FolloweeId)
+                .OnDelete(DeleteBehavior.NoAction);
         });
+
         builder.ConfigureBlobStoring();
         }
 }

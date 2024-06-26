@@ -1,6 +1,6 @@
 namespace Kampus.PostsLikes;
 
-public class IPostLikeRepository
+public interface IPostLikeRepository
 {
     
 }

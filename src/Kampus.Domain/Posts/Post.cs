@@ -1,4 +1,6 @@
+using Kampus.PostsLikes;
 using System;
+using System.Collections.Generic;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.Identity;
 
@@ -12,6 +14,8 @@ public class Post :  FullAuditedAggregateRoot<Guid>
     public string Content { get; set; }
     public string[]? BlobNames { get; set; }
 
+    public virtual ICollection<PostLike> PostLikes { get; protected set; }
+
     protected Post()
     {
     }
@@ -22,5 +26,6 @@ public class Post :  FullAuditedAggregateRoot<Guid>
         UserId = userId;
         Content = content;
         BlobNames = blobNames;
+        PostLikes = new List<PostLike>();
     }
 }
