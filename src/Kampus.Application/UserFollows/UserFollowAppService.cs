@@ -72,7 +72,7 @@ namespace Kampus.UserFollows
             result.ResultMessage = "Hata";
 
             Guid followerId = _currentUser.Id ?? Guid.Empty;
-            var follow = await _userFollowRepository.FindAsync(uf => uf.FollowerId == followerId && uf.FolloweeId == input.FolloweeId);
+            var follow = await _userFollowRepository.GetAsync(uf => uf.FollowerId == followerId && uf.FolloweeId == input.FolloweeId);
             if (follow != null)
             {
                 await _userFollowRepository.DeleteAsync(follow);

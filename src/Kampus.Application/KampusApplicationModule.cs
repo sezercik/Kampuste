@@ -1,8 +1,10 @@
 ﻿using System;
 using AutoMapper;
 using Kampus.Users;
+using Volo.Abp;
 using Volo.Abp.Account;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.Data;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
@@ -42,5 +44,11 @@ public class KampusApplicationModule : AbpModule
                 // context.MapperConfiguration.CreateMap<CurrentUser, CurrentUserNewDetailsDto>();
             });
         });
+
+        Configure<AbpDataFilterOptions>(options =>
+        {
+            options.DefaultStates[typeof(ISoftDelete)] = new DataFilterState(isEnabled: true);
+        });
+
     }
 }
