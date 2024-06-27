@@ -16,12 +16,14 @@ namespace Kampus.UserFollows
         public Guid FolloweeId { get; set; }
         public virtual IdentityUser Followee { get; set; }
 
+        public UserFolloweeType Status { get; set;}
         protected UserFollow() { }
 
-        public UserFollow(Guid followerId, Guid followeeId)
+        public UserFollow(Guid followerId, Guid followeeId, UserFolloweeType status)
         {
             FollowerId = followerId;
             FolloweeId = followeeId;
+            Status = status;
         }
     }
 }

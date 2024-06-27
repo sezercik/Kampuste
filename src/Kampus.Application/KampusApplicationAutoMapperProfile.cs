@@ -2,6 +2,7 @@
 using AutoMapper;
 using Kampus.Posts;
 using Kampus.PostsLikes;
+using Kampus.UserFollows;
 using Kampus.Users;
 using Kampus.UserSettings;
 using Volo.Abp.Account;
@@ -40,8 +41,12 @@ public class KampusApplicationAutoMapperProfile : Profile
 
         CreateMap<PostLike, PostLikeDto>();
         CreateMap<CreatePostLikeDto, PostLike>();
-        
-        
+
+        CreateMap<UserFollow, UserFollowDto>();
+        CreateMap<CreateUserFollowDto, UserFollow>();
+        CreateMap<DeleteUserFollowDto, UserFollow>();
+
+
         CreateMap<UpdateProfileDto, CustomUpdateProfileDto>()
             .ForMember(dest => dest.TcKimlikNo, opt => opt.MapFrom(src => src.GetProperty<string>("TcKimlikNo","1111111111")))
             .ForMember(dest => dest.UniversityEmail, opt => opt.MapFrom(src => src.GetProperty<string>("UniversityEmail","girilmedi@none.edu.tr")))
