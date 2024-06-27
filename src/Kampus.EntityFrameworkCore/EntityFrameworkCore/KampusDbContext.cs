@@ -144,10 +144,11 @@ public class KampusDbContext :
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
           
-            b.HasMany<PostLike>()
-               .WithOne(p => p.Post)
-               .OnDelete(DeleteBehavior.NoAction)
-               .HasForeignKey(p => p.PostId);
+            b.HasMany<PostLike>(p => p.PostLikes)
+               .WithOne()
+               .HasForeignKey(p => p.PostId)
+               .OnDelete(DeleteBehavior.NoAction);
+
         });
 
         builder.Entity<PostLike>(b =>
@@ -156,11 +157,10 @@ public class KampusDbContext :
             b.ConfigureByConvention();
 
             b.HasOne<Post>(p => p.Post)
-                .WithMany()
+                .WithMany(e => e.PostLikes)
                 .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired()
-                .HasForeignKey(p => p.PostId);
-                
+                .HasForeignKey(p => p.PostId)
+                .IsRequired();
 
             b.HasOne<IdentityUser>(p => p.User)
                 .WithMany()

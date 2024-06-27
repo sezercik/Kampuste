@@ -35,9 +35,9 @@ public class UserSettingManager : DomainService
         return new UserSetting(
             GuidGenerator.Create(),
             userId,
-            "private",
-            "dark",
-            "türkçe"
+            privacySettings,
+            themeColor,
+            language
         );
     }
 }

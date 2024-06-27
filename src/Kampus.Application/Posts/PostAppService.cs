@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper.Internal.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -71,10 +72,11 @@ public class PostAppService : ApplicationService, IPostAppService
         );
     }
 
-
+    [Authorize]
     public async Task<PostDto> CreatePost(CreatePostDto input)
     {
         var newPost = await _postManager.CreateAsync(input.UserId,input.Content,input.BlobNames);
+        await _postRepository.InsertAsync(newPost);
         return ObjectMapper.Map<Post, PostDto>(newPost);
     }
     

@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Kampus.Posts;
+using Kampus.PostsLikes;
 using Kampus.Users;
 using Kampus.UserSettings;
 using Volo.Abp.Account;
@@ -36,6 +37,9 @@ public class KampusApplicationAutoMapperProfile : Profile
 
         CreateMap<Post, PostDto>();
         CreateMap<CreatePostDto, Post>();
+
+        CreateMap<PostLike, PostLikeDto>();
+        CreateMap<CreatePostLikeDto, PostLike>();
         
         
         CreateMap<UpdateProfileDto, CustomUpdateProfileDto>()

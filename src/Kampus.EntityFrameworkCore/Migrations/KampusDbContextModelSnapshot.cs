@@ -252,17 +252,12 @@ namespace Kampus.Migrations
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PostId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
-
-                    b.HasIndex("PostId1");
 
                     b.HasIndex("UserId");
 
@@ -1227,7 +1222,7 @@ namespace Kampus.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(11)
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 6, 26, 0, 0, 0, 0, DateTimeKind.Local));
+                        .HasDefaultValue(new DateTime(2024, 6, 27, 0, 0, 0, 0, DateTimeKind.Local));
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -2313,14 +2308,10 @@ namespace Kampus.Migrations
             modelBuilder.Entity("Kampus.PostsLikes.PostLike", b =>
                 {
                     b.HasOne("Kampus.Post", "Post")
-                        .WithMany()
+                        .WithMany("PostLikes")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Kampus.Post", null)
-                        .WithMany("PostLikes")
-                        .HasForeignKey("PostId1");
 
                     b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
                         .WithMany()

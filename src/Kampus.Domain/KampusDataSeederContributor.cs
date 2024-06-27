@@ -18,7 +18,7 @@ public class KampusDataSeederContributor(
     {
         if (await postRepository.GetCountAsync() <= 0)
         {
-            Guid userId = Guid.Parse("ab5d45f9-3e8f-4246-87a6-3a134dab6fdb");
+            Guid userId = Guid.Parse("E2721EDE-F4AF-AA82-6F8E-3A13691D7128");
             IdentityUser user = await _identityUserRepository.GetAsync(userId);
             await postRepository.InsertAsync(
                 new Post(

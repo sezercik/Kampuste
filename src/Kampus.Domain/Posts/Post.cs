@@ -14,7 +14,7 @@ public class Post :  FullAuditedAggregateRoot<Guid>
     public string Content { get; set; }
     public string[]? BlobNames { get; set; }
 
-    public virtual ICollection<PostLike> PostLikes { get; protected set; }
+    public ICollection<PostLike> PostLikes { get; protected set; }
 
     protected Post()
     {

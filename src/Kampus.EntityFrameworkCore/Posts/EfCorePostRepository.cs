@@ -12,8 +12,7 @@ namespace Kampus.Migrations.Posts;
 
 public class EfCorePostRepository : EfCoreRepository<KampusDbContext, Post, Guid>, IPostRepository
 {
-    public EfCorePostRepository( IDbContextProvider<KampusDbContext> dbContextProvider
-    ):base(dbContextProvider)
+    public EfCorePostRepository( IDbContextProvider<KampusDbContext> dbContextProvider):base(dbContextProvider)
     {
     }
 
