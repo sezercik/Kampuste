@@ -20,9 +20,9 @@ public class Post :  FullAuditedAggregateRoot<Guid>
     {
     }
 
-    public Post(Guid id, Guid userId, string content,string[]? blobNames=null)
+    public Post(Guid userId, string content,string[]? blobNames=null)
     {
-        Id = id;
+        Id = Guid.NewGuid();
         UserId = userId;
         Content = content;
         BlobNames = blobNames;

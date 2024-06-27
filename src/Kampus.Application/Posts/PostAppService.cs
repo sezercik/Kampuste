@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Users;
 
 namespace Kampus.Posts;
 
@@ -13,11 +14,17 @@ public class PostAppService : ApplicationService, IPostAppService
 {
     private readonly IPostRepository _postRepository;
     private readonly PostManager _postManager;
+    private readonly ICurrentUser _currentUser;
     
-    public PostAppService(IPostRepository postRepository, PostManager postManager)
+    public PostAppService(
+        IPostRepository postRepository, 
+        PostManager postManager,
+        ICurrentUser currentUser
+        )
     {
         _postRepository = postRepository;
         _postManager = postManager;
+        _currentUser = currentUser;
     }
 
 
@@ -75,14 +82,33 @@ public class PostAppService : ApplicationService, IPostAppService
     [Authorize]
     public async Task<PostDto> CreatePost(CreatePostDto input)
     {
-        var newPost = await _postManager.CreateAsync(input.UserId,input.Content,input.BlobNames);
-        await _postRepository.InsertAsync(newPost);
-        return ObjectMapper.Map<Post, PostDto>(newPost);
+        //TODO: check for users role to make sure they are allowed to create a post
+        if (_currentUser.IsAuthenticated)
+        {
+            Guid userId = _currentUser.Id ?? Guid.Empty;
+            var newPost = await _postManager.CreateAsync(userId, input.Content, input.BlobNames);
+            await _postRepository.InsertAsync(newPost);
+            return ObjectMapper.Map<Post, PostDto>(newPost);
+        }
+        return null;
     }
-    
-    public async Task DeleteAsync(Guid id)
+
+    [Authorize]
+    public async Task<bool> DeleteAsync(Guid id)
     {
-        await _postRepository.DeleteAsync(id);
+        var currentUserRoles = _currentUser.Roles;
+        var isAdmin = Array.Exists(currentUserRoles, role => role == "admin");
+        var post = await _postRepository.GetByIdAsync(id);
+
+        //TODO: if you add more roles like moderator you should add here too
+        if (_currentUser.IsAuthenticated && (_currentUser.Id == post.UserId || isAdmin))
+        {
+            post.IsDeleted = true;
+            await _postRepository.DeleteAsync(id);
+            return true;
+        }
+
+        return false;
     }
 }
   

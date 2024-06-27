@@ -45,6 +45,22 @@ namespace Kampus.PostsLikes
             return false;
         }
 
+        [Authorize]
+        public async Task<bool> RemovePostLike(RemovePostLikeDto input)
+        {
+            if (_currentUser.IsAuthenticated)
+            {
+                Guid userId = _currentUser.Id ?? Guid.Empty;
+                var existingLike = await _postLikeRepository.FirstOrDefaultAsync(pl => pl.PostId == input.PostId && pl.UserId == userId);
+                if (existingLike == null)
+                {
+                    return false;
+                }
+                await _postLikeRepository.DeleteAsync(existingLike);
+                return true;
+            }
+            return false;
+        }
         public async Task<int> GetPostLikeCountByPostId(GetPostLikeListDtoByPostId input)
         {
             var likeCount = await _postLikeRepository.GetLikeCountByPostIdAsync(input.PostId);

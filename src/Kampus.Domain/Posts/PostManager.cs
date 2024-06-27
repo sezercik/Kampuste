@@ -18,7 +18,6 @@ public class PostManager : DomainService
     public async Task<Post> CreateAsync(Guid userId, string content, string[]? blobNames)
     {
         return new Post(
-            GuidGenerator.Create(),
             userId:userId,
             content:content,
             blobNames:blobNames

@@ -22,7 +22,6 @@ public class KampusDataSeederContributor(
             IdentityUser user = await _identityUserRepository.GetAsync(userId);
             await postRepository.InsertAsync(
                 new Post(
-                    Guid.NewGuid(),
                     userId,
                     "Kampuste'nin ilk postu",
                     null
@@ -32,7 +31,6 @@ public class KampusDataSeederContributor(
             
             await postRepository.InsertAsync(
                 new Post(
-                    Guid.NewGuid(),
                     userId,
                     "Bu bir kampuste post'udur.",
                     null
