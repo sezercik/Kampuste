@@ -38,6 +38,43 @@ namespace Kampus.PostQuotes
             return null;
         }
 
+        public async Task<CustomResultDto> DeletePostQuote(Guid postQuoteId)
+        {
+            var result = new CustomResultDto
+            {
+                IsSuccess = false,
+                ResultCode = 300,
+                ResultMessage = "Bilinmeyen Hata!"
+            };
+
+            if (!_currentUser.IsAuthenticated)
+            {
+                result.ResultMessage = "User must be authenticated to delete a post reply.";
+                return result;
+            }
+
+            var postReply = await _postQuoteRepository.GetByIdAsync(postQuoteId);
+            if (postReply == null)
+            {
+                result.ResultMessage = "PostReply bulunamadı!";
+                return result;
+            }
+
+            var isAdmin = _currentUser.Roles.Any(role => role == "admin");
+
+            if (_currentUser.Id != postReply.UserId && !isAdmin)
+            {
+                result.ResultMessage = "Yetkisiz kişi!";
+                return result;
+            }
+
+            await _postQuoteRepository.DeleteAsync(postReply);
+
+            result.IsSuccess = true;
+            result.ResultCode = 200;
+            result.ResultMessage = "Başarıyla Silindi!";
+            return result;
+        }
 
         public async Task<PostQuoteDto> GetPostQuoteById(Guid postQuoteId)
         {

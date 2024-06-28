@@ -12,5 +12,6 @@ namespace Kampus.PostQuotes
         Task<PagedResultDto<PostQuoteDto>> GetPostQuoteList(GetPostQuoteListDto input);
         Task<PostQuoteDto> GetPostQuoteById(Guid postQuoteId);
         Task<PostQuoteDto> CreatePostQuote(CreatePostQuoteDto input);
+        Task<CustomResultDto> DeletePostQuote(Guid postQuoteId);
     }
 }
