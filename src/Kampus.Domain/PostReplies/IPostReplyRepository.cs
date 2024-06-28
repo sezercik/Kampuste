@@ -11,6 +11,12 @@ namespace Kampus.PostReplies
     public interface IPostReplyRepository : IRepository<PostReply, Guid>
     {
         Task<PostReply> GetByIdAsync(Guid replyId);
-        Task<List<PostReply>> GetAllReplyOfPost(Guid repliedPostId);
+        Task<List<PostReply>> GetAllReplyOfPost(
+            Guid repliedPostId,
+            int skipCount,
+        int maxResultCount,
+        string sorting,
+        string filter = null
+            );
     }
 }

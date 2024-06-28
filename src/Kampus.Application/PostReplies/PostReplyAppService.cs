@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Users;
 
 namespace Kampus.PostReplies
@@ -37,14 +38,62 @@ namespace Kampus.PostReplies
             return null;
         }
 
-        public Task<PostReplyDto> GetPostReplyById(Guid postReplyId)
+        public async  Task<CustomResultDto> DeletePostReply(Guid postReplyId)
         {
-            throw new NotImplementedException();
+            CustomResultDto result = new CustomResultDto();
+            result.IsSuccess = false;
+            result.ResultCode = 300;
+            result.ResultMessage = "Bilinmeyen Hata!";
+
+            var currentUserRoles = _currentUser.Roles;
+            var isAdmin = Array.Exists(currentUserRoles, role => role == "admin");
+            var postReply = await _postReplyRepository.GetByIdAsync(postReplyId);
+
+            if (_currentUser.IsAuthenticated && (_currentUser.Id == postReply.UserId || isAdmin))
+            {
+                Guid userId = _currentUser.Id ?? Guid.Empty;
+                    await _postReplyRepository.DeleteAsync(postReply);
+                    result.IsSuccess = true;
+                    result.ResultCode = 200;
+                    result.ResultMessage = "Başarıyla Silindi!";
+                return result;
+            }
+            else
+            {
+                result.ResultMessage = "PostReply bulunamadı veya yetkisiz kişi!";
+                return result;
+            }
         }
 
-        public Task<PagedResultDto<PostReplyDto>> GetPostReplyList(GetPostReplyListDto input)
+        public async Task<PostReplyDto> GetPostReplyById(Guid postReplyId)
         {
-            throw new NotImplementedException();
+            var postReply = await _postReplyRepository.GetByIdAsync(postReplyId);
+            return ObjectMapper.Map<PostReply, PostReplyDto>(postReply);
+        }
+
+        public async Task<PagedResultDto<PostReplyDto>> GetPostReplyList(GetPostReplyListDto input)
+        {
+            if (input.Sorting.IsNullOrWhiteSpace())
+            {
+                input.Sorting = nameof(PostReply.Content);
+            }
+
+            var postReplies = await _postReplyRepository.GetAllReplyOfPost(
+                input.RepliedPostId,
+                input.SkipCount,
+                input.MaxResultCount,
+                input.Sorting,
+                input.Filter
+                );
+
+            var totalCount = input.Filter == null
+                ? await _postReplyRepository.CountAsync()
+                : await _postReplyRepository.CountAsync(
+                pr => pr.Content.Contains(input.Filter));
+
+            return new PagedResultDto<PostReplyDto>(
+                totalCount,
+                ObjectMapper.Map<List<PostReply>, List<PostReplyDto>>(postReplies));
         }
     }
 }

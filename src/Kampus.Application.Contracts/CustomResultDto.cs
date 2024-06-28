@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kampus.UserFollows
+namespace Kampus
 {
     public class CustomResultDto
     {

@@ -12,5 +12,6 @@ namespace Kampus.PostReplies
         Task<PagedResultDto<PostReplyDto>> GetPostReplyList(GetPostReplyListDto input);
         Task<PostReplyDto> GetPostReplyById(Guid postReplyId);
         Task<PostReplyDto> CreatePostReply(CreatePostReplyDto input);
+        Task<CustomResultDto> DeletePostReply(Guid postReplyId);
     }
 }
