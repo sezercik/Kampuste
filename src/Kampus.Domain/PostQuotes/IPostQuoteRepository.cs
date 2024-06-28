@@ -17,5 +17,6 @@ namespace Kampus.PostQuotes
             string sorting, 
             string filter = null
             );
+        Task<PostQuote> GetQuoteByUserAndPost(Guid userId, Guid quotedPostId);
     }
 }

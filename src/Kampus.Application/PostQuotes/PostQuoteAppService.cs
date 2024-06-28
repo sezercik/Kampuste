@@ -31,6 +31,13 @@ namespace Kampus.PostQuotes
             if (_currentUser.IsAuthenticated)
             {
                 Guid userId = _currentUser.Id ?? Guid.Empty;
+
+                //User only can have one quote per post
+                var existingQuote = await _postQuoteRepository.GetQuoteByUserAndPost(userId, input.QuotedPostId);
+                if (existingQuote != null)
+                {
+                    throw new Exception("User already quoted this post!");
+                }
                 var newPost = await _postQuoteManager.CreateAsync(userId, input.QuotedPostId, input.Content, input.BlobNames);
                 await _postQuoteRepository.InsertAsync(newPost);
                 return ObjectMapper.Map<PostQuote, PostQuoteDto>(newPost);

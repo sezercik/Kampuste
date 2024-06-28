@@ -35,5 +35,11 @@ namespace Kampus.PostQuotes
             var dbSet = await GetDbSetAsync();
             return await dbSet.FirstOrDefaultAsync(p => p.Id == quoteId);
         }
+
+        public async Task<PostQuote> GetQuoteByUserAndPost(Guid userId, Guid quotedPostId)
+        {
+           var dbSet = await GetDbSetAsync();
+            return await dbSet.FirstOrDefaultAsync(p => p.CreatorId == userId && p.QuotedPostId == quotedPostId);
+        }
     }
 }
