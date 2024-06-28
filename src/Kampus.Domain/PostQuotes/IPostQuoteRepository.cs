@@ -9,5 +9,7 @@ namespace Kampus.PostQuotes
 {
     public interface IPostQuoteRepository : IRepository<PostQuote, Guid>
     {
+        Task<PostQuote> GetByIdAsync(Guid quoteId);
+        Task<List<PostQuote>> GetAllQuotesOfPost(Guid quotedPostId);
     }
 }

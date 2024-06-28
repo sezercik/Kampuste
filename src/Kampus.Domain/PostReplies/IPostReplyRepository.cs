@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kampus.PostQuotes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,7 @@ namespace Kampus.PostReplies
 {
     public interface IPostReplyRepository : IRepository<PostReply, Guid>
     {
+        Task<PostReply> GetByIdAsync(Guid replyId);
+        Task<List<PostReply>> GetAllReplyOfPost(Guid repliedPostId);
     }
 }
