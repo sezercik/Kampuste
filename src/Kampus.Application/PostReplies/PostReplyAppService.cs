@@ -40,43 +40,55 @@ namespace Kampus.PostReplies
 
         public async  Task<CustomResultDto> DeletePostReply(Guid postReplyId)
         {
-            CustomResultDto result = new CustomResultDto();
-            result.IsSuccess = false;
-            result.ResultCode = 300;
-            result.ResultMessage = "Bilinmeyen Hata!";
+            var result = new CustomResultDto
+            {
+                IsSuccess = false,
+                ResultCode = 300,
+                ResultMessage = "Bilinmeyen Hata!"
+            };
 
-            var currentUserRoles = _currentUser.Roles;
-            var isAdmin = Array.Exists(currentUserRoles, role => role == "admin");
+            if (!_currentUser.IsAuthenticated)
+            {
+                result.ResultMessage = "User must be authenticated to delete a post reply.";
+                return result;
+            }
+
             var postReply = await _postReplyRepository.GetByIdAsync(postReplyId);
+            if (postReply == null)
+            {
+                result.ResultMessage = "PostReply bulunamadı!";
+                return result;
+            }
 
-            if (_currentUser.IsAuthenticated && (_currentUser.Id == postReply.UserId || isAdmin))
+            var isAdmin = _currentUser.Roles.Any(role => role == "admin");
+
+            if (_currentUser.Id != postReply.UserId && !isAdmin)
             {
-                Guid userId = _currentUser.Id ?? Guid.Empty;
-                    await _postReplyRepository.DeleteAsync(postReply);
-                    result.IsSuccess = true;
-                    result.ResultCode = 200;
-                    result.ResultMessage = "Başarıyla Silindi!";
+                result.ResultMessage = "Yetkisiz kişi!";
                 return result;
             }
-            else
-            {
-                result.ResultMessage = "PostReply bulunamadı veya yetkisiz kişi!";
-                return result;
-            }
+
+            await _postReplyRepository.DeleteAsync(postReply);
+
+            result.IsSuccess = true;
+            result.ResultCode = 200;
+            result.ResultMessage = "Başarıyla Silindi!";
+            return result;
         }
 
         public async Task<PostReplyDto> GetPostReplyById(Guid postReplyId)
         {
             var postReply = await _postReplyRepository.GetByIdAsync(postReplyId);
+            if (postReply == null)
+            {
+                throw new Exception("PostReply not found!");
+            }
             return ObjectMapper.Map<PostReply, PostReplyDto>(postReply);
         }
 
         public async Task<PagedResultDto<PostReplyDto>> GetPostReplyList(GetPostReplyListDto input)
         {
-            if (input.Sorting.IsNullOrWhiteSpace())
-            {
-                input.Sorting = nameof(PostReply.Content);
-            }
+            input.Sorting ??= nameof(PostReply.Content);
 
             var postReplies = await _postReplyRepository.GetAllReplyOfPost(
                 input.RepliedPostId,
@@ -84,16 +96,18 @@ namespace Kampus.PostReplies
                 input.MaxResultCount,
                 input.Sorting,
                 input.Filter
-                );
+            );
 
             var totalCount = input.Filter == null
                 ? await _postReplyRepository.CountAsync()
                 : await _postReplyRepository.CountAsync(
-                pr => pr.Content.Contains(input.Filter));
+                    pr => pr.Content.Contains(input.Filter)
+                );
 
             return new PagedResultDto<PostReplyDto>(
                 totalCount,
-                ObjectMapper.Map<List<PostReply>, List<PostReplyDto>>(postReplies));
+                ObjectMapper.Map<List<PostReply>, List<PostReplyDto>>(postReplies)
+            );
         }
     }
 }
