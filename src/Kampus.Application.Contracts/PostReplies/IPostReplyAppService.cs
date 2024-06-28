@@ -10,7 +10,7 @@ namespace Kampus.PostReplies
     public interface IPostReplyAppService : IApplicationService
     {
         Task<PagedResultDto<PostReplyDto>> GetPostReplyList(GetPostReplyListDto input);
-        Task<PostReplyDto> GetPostReplyById(Guid postReplayId);
+        Task<PostReplyDto> GetPostReplyById(Guid postReplyId);
         Task<PostReplyDto> CreatePostReply(CreatePostReplyDto input);
     }
 }

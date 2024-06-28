@@ -27,8 +27,4 @@
     <Compile Remove="IDenemeService.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="PostQuotes\" />
-  </ItemGroup>
-
 </Project>
