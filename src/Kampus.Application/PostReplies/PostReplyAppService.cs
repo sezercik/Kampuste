@@ -100,9 +100,9 @@ namespace Kampus.PostReplies
             );
 
             var totalCount = input.Filter == null
-                ? await _postReplyRepository.CountAsync()
+                ? await _postReplyRepository.CountAsync(p => p.RepliedPostId == input.RepliedPostId)
                 : await _postReplyRepository.CountAsync(
-                    pr => pr.Content.Contains(input.Filter)
+                    pr => pr.Content.Contains(input.Filter) && pr.RepliedPostId == input.RepliedPostId
                 );
 
             return new PagedResultDto<PostReplyDto>(

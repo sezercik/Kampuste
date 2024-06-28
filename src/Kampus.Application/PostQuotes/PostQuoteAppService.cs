@@ -106,9 +106,9 @@ namespace Kampus.PostQuotes
                 input.Filter);
 
             var totalCount = input.Filter == null
-                ? await _postQuoteRepository.CountAsync()
+                ? await _postQuoteRepository.CountAsync(p=>p.QuotedPostId == input.QuotedPostId)
                 : await _postQuoteRepository.CountAsync(
-                    pr => pr.Content.Contains(input.Filter)
+                    pr => pr.Content.Contains(input.Filter) && pr.QuotedPostId == input.QuotedPostId
                 );
 
             return new PagedResultDto<PostQuoteDto>(
