@@ -1,5 +1,7 @@
 ﻿using System;
 using AutoMapper;
+using Kampus.PostQuotes;
+using Kampus.PostReplies;
 using Kampus.Posts;
 using Kampus.PostsLikes;
 using Kampus.UserFollows;
@@ -46,6 +48,11 @@ public class KampusApplicationAutoMapperProfile : Profile
         CreateMap<CreateUserFollowDto, UserFollow>();
         CreateMap<DeleteUserFollowDto, UserFollow>();
 
+        CreateMap<PostQuote, PostQuoteDto>();
+        CreateMap<CreatePostQuoteDto, PostQuote>();
+
+        CreateMap<PostReply, PostReplyDto>();
+        CreateMap<CreatePostReplyDto, PostReply>();
 
         CreateMap<UpdateProfileDto, CustomUpdateProfileDto>()
             .ForMember(dest => dest.TcKimlikNo, opt => opt.MapFrom(src => src.GetProperty<string>("TcKimlikNo","1111111111")))
