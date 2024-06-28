@@ -24,6 +24,7 @@ namespace Kampus.PostReplies
                     !filter.IsNullOrWhiteSpace(),
                     p => p.Content.Contains(filter)
                 )
+                .Where(p => p.RepliedPostId == repliedPostId)
                 .OrderBy(sorting)
                 .Skip(skipCount)
                 .Take(maxResultCount)

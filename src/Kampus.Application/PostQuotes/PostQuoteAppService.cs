@@ -1,10 +1,10 @@
-﻿using Kampus.PostReplies;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -25,6 +25,7 @@ namespace Kampus.PostQuotes
             _currentUser = currentUser;
         }
 
+        [Authorize]
         public async Task<PostQuoteDto> CreatePostQuote(CreatePostQuoteDto input)
         {
             //TODO: check for users role to make sure they are allowed to create a post
@@ -36,7 +37,7 @@ namespace Kampus.PostQuotes
                 var existingQuote = await _postQuoteRepository.GetQuoteByUserAndPost(userId, input.QuotedPostId);
                 if (existingQuote != null)
                 {
-                    throw new Exception("User already quoted this post!");
+                    throw new UserFriendlyException("User already quoted this post!");
                 }
                 var newPost = await _postQuoteManager.CreateAsync(userId, input.QuotedPostId, input.Content, input.BlobNames);
                 await _postQuoteRepository.InsertAsync(newPost);
@@ -45,6 +46,7 @@ namespace Kampus.PostQuotes
             return null;
         }
 
+        [Authorize]
         public async Task<CustomResultDto> DeletePostQuote(Guid postQuoteId)
         {
             var result = new CustomResultDto

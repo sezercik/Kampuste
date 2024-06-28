@@ -7,6 +7,6 @@ namespace Kampus.PostQuotes
 {
     public class PostQuoteDto : PostDto
     {
-        public Guid RepliedPostId { get; set; }
+        public Guid QuotedPostId { get; set; }
     }
 }
