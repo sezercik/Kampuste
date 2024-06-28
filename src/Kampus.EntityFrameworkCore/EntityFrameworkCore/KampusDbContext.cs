@@ -19,6 +19,8 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Kampus.PostsLikes;
 using Kampus.UserFollows;
+using Kampus.PostQuotes;
+using Kampus.PostReplies;
 
 namespace Kampus.EntityFrameworkCore;
 
@@ -36,7 +38,10 @@ public class KampusDbContext :
     public DbSet<Grade> Grades { get; set; }
     
     public DbSet<UserSettings.UserSetting> UserSettings { get; set; }
+
     public DbSet<Post> Posts { get; set; }
+    public DbSet<PostQuote> PostQuotes { get; set; }
+    public DbSet<PostReply> PostReplies { get; set; }
     public DbSet<PostLike> PostLikes { get; set; }
     #region Entities from the modules
 
@@ -131,6 +136,30 @@ public class KampusDbContext :
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        builder.Entity<PostQuote>(b =>
+        {
+            b.ToTable(KampusConsts.DbTablePrefix + "PostQuotes",
+                KampusConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.HasOne(q => q.QuotedPost)
+            .WithMany()
+            .HasForeignKey(q => q.QuotedPostId)
+            .OnDelete(DeleteBehavior.Restrict);
+        });
+        builder.Entity<PostReply>(b =>
+        {
+            b.ToTable(KampusConsts.DbTablePrefix + "PostReplies",
+                KampusConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.HasOne(q => q.RepliedPost)
+            .WithMany()
+            .HasForeignKey(q => q.RepliedPostId)
+            .OnDelete(DeleteBehavior.Restrict);
+        });
         builder.Entity<Post>(b =>
         {
             b.ToTable(KampusConsts.DbTablePrefix + "Posts",
@@ -148,6 +177,9 @@ public class KampusDbContext :
                .WithOne()
                .HasForeignKey(p => p.PostId)
                .OnDelete(DeleteBehavior.NoAction);
+
+            b.Metadata.FindNavigation(nameof(Post.PostReplies)).SetPropertyAccessMode(PropertyAccessMode.Field);
+            b.Metadata.FindNavigation(nameof(Post.PostQuotes)).SetPropertyAccessMode(PropertyAccessMode.Field);
 
         });
 

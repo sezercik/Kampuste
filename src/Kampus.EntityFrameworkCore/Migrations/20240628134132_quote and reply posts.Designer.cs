@@ -4,6 +4,7 @@ using Kampus.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Kampus.Migrations
 {
     [DbContext(typeof(KampusDbContext))]
-    partial class KampusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240628134132_quote and reply posts")]
+    partial class quoteandreplyposts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2303,13 +2306,8 @@ namespace Kampus.Migrations
                 {
                     b.HasBaseType("Kampus.Post");
 
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("QuotedPostId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("PostId");
 
                     b.HasIndex("QuotedPostId");
 
@@ -2320,13 +2318,8 @@ namespace Kampus.Migrations
                 {
                     b.HasBaseType("Kampus.Post");
 
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("RepliedPostId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("PostId");
 
                     b.HasIndex("RepliedPostId");
 
@@ -2552,10 +2545,6 @@ namespace Kampus.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Kampus.Post", null)
-                        .WithMany("PostQuotes")
-                        .HasForeignKey("PostId");
-
                     b.HasOne("Kampus.Post", "QuotedPost")
                         .WithMany()
                         .HasForeignKey("QuotedPostId")
@@ -2573,10 +2562,6 @@ namespace Kampus.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Kampus.Post", null)
-                        .WithMany("PostReplies")
-                        .HasForeignKey("PostId");
-
                     b.HasOne("Kampus.Post", "RepliedPost")
                         .WithMany()
                         .HasForeignKey("RepliedPostId")
@@ -2589,10 +2574,6 @@ namespace Kampus.Migrations
             modelBuilder.Entity("Kampus.Post", b =>
                 {
                     b.Navigation("PostLikes");
-
-                    b.Navigation("PostQuotes");
-
-                    b.Navigation("PostReplies");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

@@ -4,6 +4,7 @@ using Kampus.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Kampus.Migrations
 {
     [DbContext(typeof(KampusDbContext))]
-    partial class KampusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240628141429_fix reply and quote models")]
+    partial class fixreplyandquotemodels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -200,8 +203,144 @@ namespace Kampus.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AppPosts", (string)null);
+                });
 
-                    b.UseTptMappingStrategy();
+            modelBuilder.Entity("Kampus.PostQuotes.PostQuote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BlobNames")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("QuotedPostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuotedPostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AppPostQuotes", (string)null);
+                });
+
+            modelBuilder.Entity("Kampus.PostReplies.PostReply", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BlobNames")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("RepliedPostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RepliedPostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AppPostReplies", (string)null);
                 });
 
             modelBuilder.Entity("Kampus.PostsLikes.PostLike", b =>
@@ -254,12 +393,22 @@ namespace Kampus.Migrations
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("PostQuoteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PostReplyId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
+
+                    b.HasIndex("PostQuoteId");
+
+                    b.HasIndex("PostReplyId");
 
                     b.HasIndex("UserId");
 
@@ -2299,40 +2448,6 @@ namespace Kampus.Migrations
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
 
-            modelBuilder.Entity("Kampus.PostQuotes.PostQuote", b =>
-                {
-                    b.HasBaseType("Kampus.Post");
-
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("QuotedPostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("QuotedPostId");
-
-                    b.ToTable("AppPostQuotes", (string)null);
-                });
-
-            modelBuilder.Entity("Kampus.PostReplies.PostReply", b =>
-                {
-                    b.HasBaseType("Kampus.Post");
-
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RepliedPostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("RepliedPostId");
-
-                    b.ToTable("AppPostReplies", (string)null);
-                });
-
             modelBuilder.Entity("Kampus.Post", b =>
                 {
                     b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
@@ -2344,6 +2459,44 @@ namespace Kampus.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Kampus.PostQuotes.PostQuote", b =>
+                {
+                    b.HasOne("Kampus.Post", "QuotedPost")
+                        .WithMany()
+                        .HasForeignKey("QuotedPostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("QuotedPost");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Kampus.PostReplies.PostReply", b =>
+                {
+                    b.HasOne("Kampus.Post", "RepliedPost")
+                        .WithMany()
+                        .HasForeignKey("RepliedPostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RepliedPost");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Kampus.PostsLikes.PostLike", b =>
                 {
                     b.HasOne("Kampus.Post", "Post")
@@ -2351,6 +2504,14 @@ namespace Kampus.Migrations
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Kampus.PostQuotes.PostQuote", null)
+                        .WithMany("PostLikes")
+                        .HasForeignKey("PostQuoteId");
+
+                    b.HasOne("Kampus.PostReplies.PostReply", null)
+                        .WithMany("PostLikes")
+                        .HasForeignKey("PostReplyId");
 
                     b.HasOne("Volo.Abp.Identity.IdentityUser", "User")
                         .WithMany()
@@ -2544,55 +2705,19 @@ namespace Kampus.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Kampus.Post", b =>
+                {
+                    b.Navigation("PostLikes");
+                });
+
             modelBuilder.Entity("Kampus.PostQuotes.PostQuote", b =>
                 {
-                    b.HasOne("Kampus.Post", null)
-                        .WithOne()
-                        .HasForeignKey("Kampus.PostQuotes.PostQuote", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Kampus.Post", null)
-                        .WithMany("PostQuotes")
-                        .HasForeignKey("PostId");
-
-                    b.HasOne("Kampus.Post", "QuotedPost")
-                        .WithMany()
-                        .HasForeignKey("QuotedPostId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("QuotedPost");
+                    b.Navigation("PostLikes");
                 });
 
             modelBuilder.Entity("Kampus.PostReplies.PostReply", b =>
                 {
-                    b.HasOne("Kampus.Post", null)
-                        .WithOne()
-                        .HasForeignKey("Kampus.PostReplies.PostReply", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Kampus.Post", null)
-                        .WithMany("PostReplies")
-                        .HasForeignKey("PostId");
-
-                    b.HasOne("Kampus.Post", "RepliedPost")
-                        .WithMany()
-                        .HasForeignKey("RepliedPostId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("RepliedPost");
-                });
-
-            modelBuilder.Entity("Kampus.Post", b =>
-                {
                     b.Navigation("PostLikes");
-
-                    b.Navigation("PostQuotes");
-
-                    b.Navigation("PostReplies");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

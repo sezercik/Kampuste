@@ -1,3 +1,5 @@
+using Kampus.PostQuotes;
+using Kampus.PostReplies;
 using Kampus.PostsLikes;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,9 @@ public class Post :  FullAuditedAggregateRoot<Guid>
     public string[]? BlobNames { get; set; }
 
     public ICollection<PostLike> PostLikes { get; protected set; }
+    public ICollection<PostQuote> PostQuotes { get; protected set; }
+    public ICollection<PostReply> PostReplies { get; protected set; }
+
 
     protected Post()
     {
@@ -27,5 +32,7 @@ public class Post :  FullAuditedAggregateRoot<Guid>
         Content = content;
         BlobNames = blobNames;
         PostLikes = new List<PostLike>();
+        PostQuotes = new List<PostQuote>();
+        PostReplies = new List<PostReply>();
     }
 }
