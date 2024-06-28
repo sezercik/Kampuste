@@ -62,22 +62,22 @@ namespace Kampus.PostQuotes
                 return result;
             }
 
-            var postReply = await _postQuoteRepository.GetByIdAsync(postQuoteId);
-            if (postReply == null)
+            var postQuote = await _postQuoteRepository.GetByIdAsync(postQuoteId);
+            if (postQuote == null)
             {
-                result.ResultMessage = "PostReply bulunamadı!";
+                result.ResultMessage = "PostQuote bulunamadı!";
                 return result;
             }
 
             var isAdmin = _currentUser.Roles.Any(role => role == "admin");
 
-            if (_currentUser.Id != postReply.UserId && !isAdmin)
+            if (_currentUser.Id != postQuote.UserId && !isAdmin)
             {
                 result.ResultMessage = "Yetkisiz kişi!";
                 return result;
             }
 
-            await _postQuoteRepository.DeleteAsync(postReply);
+            await _postQuoteRepository.DeleteAsync(postQuote);
 
             result.IsSuccess = true;
             result.ResultCode = 200;
