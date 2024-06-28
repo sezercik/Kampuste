@@ -26,8 +26,4 @@
     <Compile Remove="CurrentUserService.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="PostQuotes\" />
-  </ItemGroup>
-
 </Project>

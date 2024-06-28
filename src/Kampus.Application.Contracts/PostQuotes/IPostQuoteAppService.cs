@@ -9,8 +9,8 @@ namespace Kampus.PostQuotes
 {
     public interface IPostQuoteAppService : IApplicationService
     {
-        Task<PagedResultDto<PostQuoteDto>> GetPostReplyList(GetPostQuoteListDto input);
+        Task<PagedResultDto<PostQuoteDto>> GetPostQuoteList(GetPostQuoteListDto input);
         Task<PostQuoteDto> GetPostQuoteById(Guid postQuoteId);
-        Task<PostQuoteDto> CreatePostReply(CreatePostQuoteDto input);
+        Task<PostQuoteDto> CreatePostQuote(CreatePostQuoteDto input);
     }
 }
