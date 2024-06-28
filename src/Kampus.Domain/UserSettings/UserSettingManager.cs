@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Domain.Services;
 
 namespace Kampus.UserSettings;
@@ -29,7 +30,7 @@ public class UserSettingManager : DomainService
         var existinUserSettings = await _userSettingRepository.FindByUserId(userId);
         if (existinUserSettings != null)
         {
-            throw new Exception("Ayar var");
+            throw new UserFriendlyException("Kullanıcı Ayarları zaten oluşturulmuş", "501");
         }
 
         return new UserSetting(

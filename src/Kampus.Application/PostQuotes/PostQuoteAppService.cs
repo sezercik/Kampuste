@@ -37,7 +37,7 @@ namespace Kampus.PostQuotes
                 var existingQuote = await _postQuoteRepository.GetQuoteByUserAndPost(userId, input.QuotedPostId);
                 if (existingQuote != null)
                 {
-                    throw new UserFriendlyException("User already quoted this post!");
+                    throw new UserFriendlyException("User already quoted this post","501");
                 }
                 var newPost = await _postQuoteManager.CreateAsync(userId, input.QuotedPostId, input.Content, input.BlobNames);
                 await _postQuoteRepository.InsertAsync(newPost);
@@ -90,7 +90,7 @@ namespace Kampus.PostQuotes
             var postQuote = await _postQuoteRepository.GetByIdAsync(postQuoteId);
             if (postQuote == null)
             {
-                throw new Exception("PostReply not found!");
+                throw new UserFriendlyException("PostQuote not found!", "502");
             }
             return ObjectMapper.Map<PostQuote, PostQuoteDto>(postQuote);
         }

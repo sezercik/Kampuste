@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -81,7 +82,7 @@ namespace Kampus.PostReplies
             var postReply = await _postReplyRepository.GetByIdAsync(postReplyId);
             if (postReply == null)
             {
-                throw new Exception("PostReply not found!");
+                throw new UserFriendlyException("PostReply not found!", "502");
             }
             return ObjectMapper.Map<PostReply, PostReplyDto>(postReply);
         }
