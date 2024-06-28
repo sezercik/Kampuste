@@ -10,6 +10,12 @@ namespace Kampus.PostQuotes
     public interface IPostQuoteRepository : IRepository<PostQuote, Guid>
     {
         Task<PostQuote> GetByIdAsync(Guid quoteId);
-        Task<List<PostQuote>> GetAllQuotesOfPost(Guid quotedPostId);
+        Task<List<PostQuote>> GetAllQuotesOfPost(
+            Guid quotedPostId,
+            int skipCount, 
+            int maxResultCount, 
+            string sorting, 
+            string filter = null
+            );
     }
 }

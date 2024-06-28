@@ -1,12 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Kampus.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+
 
 namespace Kampus.PostQuotes
 {
-    internal class EfCorePostQuoteRepository
+    public class EfCorePostQuoteRepository : EfCoreRepository<KampusDbContext, PostQuote, Guid>, IPostQuoteRepository
     {
+        public EfCorePostQuoteRepository(IDbContextProvider<KampusDbContext> dbContextProvider) : base(dbContextProvider)
+        {
+        }
+        public async Task<List<PostQuote>> GetAllQuotesOfPost(Guid quotedPostId, int skipCount, int maxResultCount, string sorting, string filter = null)
+        {
+            var dbSet = await GetDbSetAsync();
+            return await dbSet.WhereIf
+                (
+                    !filter.IsNullOrWhiteSpace(),
+                    p => p.Content.Contains(filter)
+                )
+                .OrderBy(sorting)
+                .Skip(skipCount)
+                .Take(maxResultCount)
+                .ToListAsync();
+        }
+
+        public async Task<PostQuote> GetByIdAsync(Guid quoteId)
+        {
+            var dbSet = await GetDbSetAsync();
+            return await dbSet.FirstOrDefaultAsync(p => p.Id == quoteId);
+        }
     }
 }
