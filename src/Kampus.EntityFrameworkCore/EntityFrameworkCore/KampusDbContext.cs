@@ -21,6 +21,9 @@ using Kampus.PostsLikes;
 using Kampus.UserFollows;
 using Kampus.PostQuotes;
 using Kampus.PostReplies;
+using Kampus.UserFriends;
+using Kampus.UserBlocks;
+using Kampus.UserFriendRequests;
 
 namespace Kampus.EntityFrameworkCore;
 
@@ -43,6 +46,9 @@ public class KampusDbContext :
     public DbSet<PostQuote> PostQuotes { get; set; }
     public DbSet<PostReply> PostReplies { get; set; }
     public DbSet<PostLike> PostLikes { get; set; }
+    public DbSet<UserFriend> UserFriends { get; set; }
+    public DbSet<UserBlock> UserBlokcs { get; set; }
+    public DbSet<UserFriendRequest> UserFriendRequests { get; set; }
     #region Entities from the modules
 
     /* Notice: We only implemented IIdentityDbContext and ITenantManagementDbContext
@@ -219,6 +225,50 @@ public class KampusDbContext :
                 .IsRequired();
 
             b.HasQueryFilter(uf => !uf.Follower.IsDeleted && !uf.Followee.IsDeleted);
+        });
+
+        builder.Entity<UserFriend>(b =>
+        {
+            b.ToTable(KampusConsts.DbTablePrefix + "UserFriends", KampusConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            b.HasOne(f => f.User)
+            .WithMany()
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasOne(f => f.FriendUser)
+            .WithMany()
+            .HasForeignKey(f => f.FriendUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<UserFriendRequest>(b =>
+        {
+            b.ToTable(KampusConsts.DbTablePrefix + "UserFriendRequests", KampusConsts.DbSchema);
+            b.HasOne(fr => fr.Sender)
+            .WithMany()
+            .HasForeignKey(fr => fr.SenderId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasOne(fr => fr.Receiver)
+             .WithMany()
+             .HasForeignKey(fr => fr.ReceiverId)
+             .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<UserBlock>(b =>
+        {
+            b.ToTable(KampusConsts.DbTablePrefix + "BlockedUsers", KampusConsts.DbSchema);
+            b.HasOne(bu => bu.User)
+             .WithMany()
+             .HasForeignKey(bu => bu.UserId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasOne(bu => bu.BlockedUser)
+             .WithMany()
+             .HasForeignKey(bu => bu.BlockedUserId)
+             .OnDelete(DeleteBehavior.Restrict);
         });
 
         builder.Entity<IdentityUser>(b =>
