@@ -5,6 +5,8 @@ using Kampus.PostReplies;
 using Kampus.Posts;
 using Kampus.PostsLikes;
 using Kampus.UserFollows;
+using Kampus.UserFriendRequests;
+using Kampus.UserFriends;
 using Kampus.Users;
 using Kampus.UserSettings;
 using Volo.Abp.Account;
@@ -53,6 +55,14 @@ public class KampusApplicationAutoMapperProfile : Profile
 
         CreateMap<PostReply, PostReplyDto>();
         CreateMap<CreatePostReplyDto, PostReply>();
+
+        CreateMap<UserFriends.UserFriend, UserFriendDto>();
+        CreateMap<CreateUserFriendDto, UserFriends.UserFriend>();
+
+        CreateMap<UserFriendRequest, UserFriendRequest>();
+        CreateMap<CreateFriendRequestDto, UserFriendRequest>();
+        CreateMap<UpdateFriendRequestDto, UserFriendRequest>();
+
 
         CreateMap<UpdateProfileDto, CustomUpdateProfileDto>()
             .ForMember(dest => dest.TcKimlikNo, opt => opt.MapFrom(src => src.GetProperty<string>("TcKimlikNo","1111111111")))

@@ -34,7 +34,7 @@ namespace Kampus.UserFriendRequests
         public async Task<List<UserFriendRequest>> GetSentFriendRequests(Guid userId, int skipCount, int maxResultCount, string sorting, string filter = null)
         {
             var dbSet = await GetDbSetAsync();
-            return await dbSet.WhereIf
+            List<UserFriendRequest> userFriendRequests= await dbSet.WhereIf
                 (
                     !filter.IsNullOrWhiteSpace(),
                     ufr => ufr.Receiver.NormalizedUserName.Contains(filter)
@@ -44,6 +44,7 @@ namespace Kampus.UserFriendRequests
                 .Skip(skipCount)
                 .Take(maxResultCount)
                 .ToListAsync();
+            return userFriendRequests;
         }
     }
 }

@@ -202,6 +202,12 @@ namespace Kampus.UserFriend
             {
                 throw new UserFriendlyException("Kullanıcı giriş yapmalı!", "401");
             }
+
+            var existingRequest = await _userFriendRequestRepository.FirstOrDefaultAsync(ufr => ufr.SenderId == _currentUser.Id && ufr.ReceiverId == receiverId);
+            if (existingRequest != null)
+            {
+                throw new UserFriendlyException("Zaten bir arkadaşlık isteği gönderdiniz!");
+            }
             var friendRequest = new UserFriendRequest(_currentUser.Id ?? Guid.Empty, receiverId);
             await _userFriendRequestRepository.InsertAsync(friendRequest,autoSave:true);
         }
