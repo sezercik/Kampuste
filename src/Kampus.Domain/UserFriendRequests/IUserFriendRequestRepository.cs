@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 
-namespace Kampus.UserFriends
+namespace Kampus.UserFriendRequests
 {
-    public interface IUserFriendRepository : IRepository<UserFriend, Guid>
+    public interface IUserFriendRequestRepository : IRepository<UserFriendRequest, Guid>
     {
-        Task<List<UserFriend>> GetUserFriends(
+        Task<List<UserFriendRequest>> GetSentFriendRequests(
             Guid userId,
             int skipCount,
             int maxResultCount,
@@ -17,14 +17,12 @@ namespace Kampus.UserFriends
             string filter = null
             );
 
-        Task<List<UserFriend>> GetUserCloseFriends(
+        Task<List<UserFriendRequest>> GetReceivedFriendRequests(
             Guid userId,
             int skipCount,
             int maxResultCount,
             string sorting,
             string filter = null
             );
-
-        
     }
 }
