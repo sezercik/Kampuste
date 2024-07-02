@@ -63,6 +63,27 @@ public class KampusMenuContributor : IMenuContributor
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
         administration.SetSubItemOrder(SettingManagementMenus.GroupName, 3);
 
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                "Kampuste",
+                l["Menu:Kampuste"],
+                icon: "fas fa-university"
+            ).AddItem(
+                new ApplicationMenuItem(
+                    "Kampuste.Users",
+                    l["Menu:Users"],
+                    url: "/users"
+                    )
+                ).AddItem(
+                new ApplicationMenuItem(
+                    "Kampuste.Posts",
+                    l["Menu:Posts"],
+                    url: "/posts"
+                    )
+                )
+            );
+
         return Task.CompletedTask;
     }
 

@@ -2,7 +2,28 @@
   "culture": "tr",
   "texts": {
     "Menu:Home": "Ana sayfa",
-    "Welcome": "Hoşgeldiniz",
-    "LongWelcomeMessage": "Uygulamaya hoşgeldiniz. Bu, ABP framework'ü üzerine bina edilmiş bir başlangıç projesidir. Daha fazla bilgi için abp.io adresini ziyaret edebilirsiniz."
+    "Welcome": "Hoş geldiniz",
+    "LongWelcomeMessage": "Uygulamaya hoşgeldiniz. Bu, ABP framework'ü üzerine bina edilmiş bir başlangıç projesidir. Daha fazla bilgi için abp.io adresini ziyaret edebilirsiniz.",
+    "Menu:Kampuste": "Kampüste",
+    "Menu:Users": "Kullanıcılar",
+    "Menu:Posts":"Gönderiler", 
+    //"Menu:Students":"Öğrenciler",
+    "Actions": "İşlemler",
+    "Close": "Kapat",
+    "Delete": "Sil",
+    "Edit": "Düzenle",
+    "Save": "Kaydet",
+    "NewUser": "Yeni Kullanıcı",
+    "Name": "Ad",
+    "Surname": "Soyad",
+    "Type": "Tür",
+    "CreationTime": "Oluşturulma Zamanı",
+    "AreYouSure": "Emin misiniz?",
+    "AreYouSureDelete": "Bu kaydı silmek istediğinizden emin misiniz?",
+    "Enum:UserFriendType.0": "Normal",
+    "Enum:UserFriendType.1": "Yakın",
+    "Enum:UserFolloweeType.0": "Beklemede",
+    "Enum:UserFolloweeType.1": "Takip Ediliyor",
+
   }
 }
