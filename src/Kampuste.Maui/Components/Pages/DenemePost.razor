@@ -1,0 +1,27 @@
+﻿@page "/posts"
+@inject PostService PostService
+
+<h3>Posts</h3>
+
+@if (posts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <ul>
+        @foreach (var post in posts)
+        {
+            <li>@post.Content</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<PostDto> posts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        posts = await PostService.GetPostsAsync();
+    }
+}

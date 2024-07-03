@@ -6,7 +6,9 @@
     "LongWelcomeMessage": "Uygulamaya hoşgeldiniz. Bu, ABP framework'ü üzerine bina edilmiş bir başlangıç projesidir. Daha fazla bilgi için abp.io adresini ziyaret edebilirsiniz.",
     "Menu:Kampuste": "Kampüste",
     "Menu:Users": "Kullanıcılar",
-    "Menu:Posts":"Gönderiler", 
+    "Menu:Posts": "Gönderiler",
+    "Posts": "Gönderiler",
+    "CreatePost": "Gönderi Oluştur",
     //"Menu:Students":"Öğrenciler",
     "Actions": "İşlemler",
     "Close": "Kapat",
@@ -23,7 +25,7 @@
     "Enum:UserFriendType.0": "Normal",
     "Enum:UserFriendType.1": "Yakın",
     "Enum:UserFolloweeType.0": "Beklemede",
-    "Enum:UserFolloweeType.1": "Takip Ediliyor",
+    "Enum:UserFolloweeType.1": "Takip Ediliyor"
 
   }
 }

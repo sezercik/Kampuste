@@ -33,6 +33,10 @@ namespace Kampuste.Maui
             });
 
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddSingleton(new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:4153")
+            });
            
 
 
