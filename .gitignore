@@ -263,3 +263,6 @@ src/Kampus.Blazor/Logs/*
 
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
+/src/Kampus.AuthServer/appsettings.json
+/src/Kampus.DbMigrator/appsettings.json
+/src/Kampus.HttpApi.Host/appsettings.json
