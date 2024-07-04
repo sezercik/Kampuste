@@ -1,7 +1,6 @@
 ﻿@page "/posts"
-@using Services.Posts
-@inject IPostService PostService
-@using Kampus.Posts
+@inject PostService PostService
+
 <h3>Posts</h3>
 
 @if (posts == null)
@@ -13,7 +12,7 @@ else
     <ul>
         @foreach (var post in posts)
         {
-            <li>@post.Content</li>
+            <li style="color:wheat;">@post.Content</li>
         }
     </ul>
 }
@@ -25,5 +24,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         posts = await PostService.GetPostsAsync();
+        var claims = DenemeService.Foo();
     }
 }
