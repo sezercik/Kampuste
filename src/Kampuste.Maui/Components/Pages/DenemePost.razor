@@ -1,6 +1,7 @@
 ﻿@page "/posts"
-@inject PostService PostService
-
+@using Services.Posts
+@inject IPostService PostService
+@using Kampus.Posts
 <h3>Posts</h3>
 
 @if (posts == null)
@@ -18,6 +19,7 @@ else
 }
 
 @code {
+
     private List<PostDto> posts;
 
     protected override async Task OnInitializedAsync()

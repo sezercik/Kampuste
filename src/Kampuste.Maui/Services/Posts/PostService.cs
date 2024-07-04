@@ -10,7 +10,9 @@ using Volo.Abp.DependencyInjection;
 
 namespace Kampuste.Maui.Services.Posts
 {
-    public class PostService : ITransientDependency
+    [Volo.Abp.DependencyInjection.Dependency(ReplaceServices = true)]
+    [ExposeServices(typeof(IPostService))]
+    public class PostService : ITransientDependency, IPostService
     {
         private readonly HttpClient _httpClient;
 
@@ -21,7 +23,7 @@ namespace Kampuste.Maui.Services.Posts
 
         public async Task<List<PostDto>> GetPostsAsync()
         {
-            var response = await _httpClient.GetAsync("api/posts");
+            var response = await _httpClient.GetAsync("api/app/post/posts");
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadFromJsonAsync<PagedResultDto<PostDto>>();
             return (List<PostDto>)result.Items;
@@ -29,7 +31,7 @@ namespace Kampuste.Maui.Services.Posts
 
         public async Task<PostDto> GetPostByIdAsync(Guid postId)
         {
-            var response = await _httpClient.GetAsync($"api/posts/{postId}");
+            var response = await _httpClient.GetAsync($"api/app/post/posts/{postId}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<PostDto>();
         }

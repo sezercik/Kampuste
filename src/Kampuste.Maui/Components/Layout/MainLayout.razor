@@ -24,7 +24,7 @@
 
     protected override void OnParametersSet()
     {
-        var showNavMenuPages = new List<string> { "/akis", "/profil", "/"};
+        var showNavMenuPages = new List<string> { "/posts", "/profil", "/" };
         var currentUri = Navigation.Uri.ToLower();
         ShowNavMenu = showNavMenuPages.Any(page => currentUri.EndsWith(page));
     }

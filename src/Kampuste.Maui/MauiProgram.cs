@@ -11,6 +11,7 @@ using Volo.Abp.Autofac;
 using Microsoft.Extensions.FileProviders;
 using Volo.Abp;
 using Microsoft.Maui.LifecycleEvents;
+using Kampuste.Maui.Services.Posts;
 
 namespace Kampuste.Maui
 {
@@ -35,9 +36,9 @@ namespace Kampuste.Maui
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddSingleton(new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:4153")
+                BaseAddress = new Uri("https://smooth-tahr-perfectly.ngrok-free.app/")
             });
-           
+            //builder.Services.AddSingleton(PostService)();
 
 
 #if DEBUG
