@@ -1,6 +1,8 @@
 ﻿@page "/akis"
+@using Kampus.Posts
+@using Kampuste.Maui.Services.Posts
 @inject NavigationManager Navigation
-
+@inject IPostService PostService
 
 <div class="content">
     <div class="tab-bar2">
@@ -35,6 +37,28 @@
                 </div>
             </div>
         }
+             @foreach (var post in postsdto)
+            {
+                <div class="post">
+                    <div class="post-header">
+                        <img src="https://via.placeholder.com/50" alt="Profil Fotoğrafı" class="user-photo" />
+                        <span class="username">@post.UserId</span>
+                        <span class="post-date">@post.CreationTime.ToString("dd MMMM yyyy")</span>
+                    </div>
+                    <div class="post-content">
+                      @*  @if (!string.IsNullOrEmpty(post.))
+                        {
+                            <img src="@post.ImageUrl" alt="Resim" />
+                        }  *@
+                        <p>@post.Content</p>
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-button"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                        <button class="action-button"><i class="fa fa-comment" aria-hidden="true"></i></button>
+                        <button class="action-button"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                    }
         </div>
     </div>
 </div>
@@ -46,6 +70,11 @@
         new Post { Username = "Kullanıcı Adı", PostDate = DateTime.Now.AddDays(-2), Content = "Bu bir resimli gönderi örneğidir. Lorem ipsum dolor sit amet, consectetur adipiscing elit.", ImageUrl = "https://via.placeholder.com/200" },
         new Post { Username = "Kullanıcı Adı", PostDate = DateTime.Now.AddDays(-1), Content = "Bu bir resimli gönderi örneğidir. Lorem ipsum dolor sit amet, consectetur adipiscing elit.", ImageUrl = "https://via.placeholder.com/200" },
     };
+    private List<PostDto> postsdto = new();
+    protected override async Task OnInitializedAsync()
+    {
+        postsdto = await PostService.GetPostsAsync();
+    }
 
     private void ProfileGit()
     {

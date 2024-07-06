@@ -21,7 +21,7 @@ namespace Kampuste.Maui.Services.Posts
             _httpClient = httpClient;
         }
 
-        public async Task<List<PostDto>> GetPostsAsync()
+        public async Task<List<PostDto>> GetPostsAsync()//https://smooth-tahr-perfectly.ngrok-free.app/api/app/post/posts
         {
             var response = await _httpClient.GetAsync("api/app/post/posts");
             response.EnsureSuccessStatusCode();
@@ -32,6 +32,30 @@ namespace Kampuste.Maui.Services.Posts
         public async Task<PostDto> GetPostByIdAsync(Guid postId)
         {
             var response = await _httpClient.GetAsync($"api/app/post/posts/{postId}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<PostDto>();
+        }
+
+        public async Task<List<PostDto>> GetPostListByUserIDAsync(Guid userId, string filter, string sorting, int skipCount, int MaxResultCount)
+        {
+            string query = $"api/app/post/post-list-by-user-id?userId={userId}&Filter={filter}&Sorting={sorting}&SkipCount={skipCount}&MaxResultCount={MaxResultCount}";
+            var response = await _httpClient.GetAsync(query);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<PostDto>>();
+        }
+
+        public async Task<PostDto> PostPostAsync(PostDto post)
+        {
+            string query = $"api/app/post/post";
+            var response = await _httpClient.PostAsJsonAsync(query, post);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<PostDto>();
+        }
+
+        public async Task<PostDto> DeletePostAsync(Guid postId)
+        {
+            string query = $"api/app/post/{postId}";
+            var response = await _httpClient.DeleteAsync(query);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<PostDto>();
         }
