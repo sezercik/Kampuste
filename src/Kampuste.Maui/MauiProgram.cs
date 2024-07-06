@@ -21,14 +21,13 @@ namespace Kampuste.Maui
         {
             var builder = MauiApp.CreateBuilder();
 
-
             builder
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 }).ConfigureContainer(new AbpAutofacServiceProviderFactory(new Autofac.ContainerBuilder()));
-            builder.Services.AddApplication<KampusteMauiAppModule>(options =>
+            builder.Services.AddApplication<KampusteMauiModule>(options =>
             {
                 options.Services.ReplaceConfiguration(builder.Configuration);
             });
@@ -48,7 +47,6 @@ namespace Kampuste.Maui
 
 
             var app = builder.Build();
-
             app.Services.GetRequiredService<IAbpApplicationWithExternalServiceProvider>().Initialize(app.Services);
             var assembly = typeof(App).GetTypeInfo().Assembly;
             builder.Configuration.AddJsonFile(new EmbeddedFileProvider(assembly), "appsettings.json", optional: false, false);

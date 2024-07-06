@@ -24,32 +24,44 @@ namespace Kampuste.Maui.Services.PostLike
             return await response.Content.ReadFromJsonAsync<List<PostLikeDto>>();
         }
 
-        public Task<List<PostLikeDto>> GetLikeCountByPostIdAsync(Guid postId)
+        public async Task<List<PostLikeDto>> GetLikeCountByPostIdAsync(Guid postId)
         {
-            throw new NotImplementedException();
+            string query = $"api/app/post-like/post-like/post-like-count-by-post-id?PostId={postId}";
+            var response = await _httpClient.GetAsync(query);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<PostLikeDto>>();
         }
 
-        public Task<List<PostLikeDto>> GetLikeCountByUserIdAsync(Guid UserId)
+        public async Task<List<PostLikeDto>> GetLikeCountByUserIdAsync(Guid UserId)
         {
-            throw new NotImplementedException();
+            string query = $"api/app/post-like/post-like/post-like-count-by-user-id?UserId={UserId}";
+            var response = await _httpClient.GetAsync(query);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<PostLikeDto>>();
         }
 
-        public Task<List<PostLikeDto>> GetLikeListByPostIdAsync(Guid postId)
+        public async Task<List<PostLikeDto>> GetLikeListByPostIdAsync(Guid postId)
         {
-            throw new NotImplementedException();
+            string query = $"api/app/post-like/post-like/post-like-list-by-post-id?PostId={postId}";
+            var response = await _httpClient.GetAsync(query);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<PostLikeDto>>();
         }
 
-        public Task<List<PostLikeDto>> GetLikeListByUserIdAsync(Guid UserId)
+        public async Task<List<PostLikeDto>> GetLikeListByUserIdAsync(Guid UserId)
         {
-            throw new NotImplementedException();
+            string query = $"api/app/post-like/post-like/post-like-list-by-user-id?UserId{UserId}";
+            var response = await _httpClient.GetAsync(query);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<PostLikeDto>>();
         }
 
         public async Task<List<PostLikeDto>> PostPostLikeAsync(Guid postId)
         {
             string query = $"api/app/post-like/post-like";
-            var response = await _httpClient.PostAsJsonAsync(query,postId);
+            var response = await _httpClient.PostAsJsonAsync(query, postId);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync <List<PostLikeDto>>();
+            return await response.Content.ReadFromJsonAsync<List<PostLikeDto>>();
         }
     }
 }

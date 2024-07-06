@@ -12,7 +12,7 @@ namespace Kampuste.Maui.Services.Posts
 {
     [Volo.Abp.DependencyInjection.Dependency(ReplaceServices = true)]
     [ExposeServices(typeof(IPostService))]
-    public class PostService : ITransientDependency, IPostService
+    public class PostService : IPostService, ITransientDependency
     {
         private readonly HttpClient _httpClient;
 
@@ -25,8 +25,14 @@ namespace Kampuste.Maui.Services.Posts
         {
             var response = await _httpClient.GetAsync("api/app/post/posts");
             response.EnsureSuccessStatusCode();
+
             var result = await response.Content.ReadFromJsonAsync<PagedResultDto<PostDto>>();
-            return (List<PostDto>)result.Items;
+            if (result == null)
+            {
+                throw new InvalidOperationException("The result from the API is null.");
+            }
+
+            return result.Items.ToList();
         }
 
         public async Task<PostDto> GetPostByIdAsync(Guid postId)

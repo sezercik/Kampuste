@@ -25,6 +25,7 @@ public class EfCorePostRepository : EfCoreRepository<KampusDbContext, Post, Guid
 
     public async Task<List<Post>> GetListOfPosts(int skipCount, int maxResultCount, string sorting, string filter = null)
     {
+        //TODO: reply ve quotelarý almasýn
         var dbSet = await GetDbSetAsync();
         return await dbSet.WhereIf
             (
