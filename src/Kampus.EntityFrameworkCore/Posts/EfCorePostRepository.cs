@@ -27,18 +27,19 @@ public class EfCorePostRepository : EfCoreRepository<KampusDbContext, Post, Guid
     {
         //TODO: fix all post quote and reply repository and services to adapt post type
         var dbSet = await GetDbSetAsync();
-
-        return await dbSet
+        var ret = await dbSet
             .WhereIf
             (
                 !filter.IsNullOrWhiteSpace(),
                 p => p.Content.Contains(filter)
             )
             .Where(p => p.PostType == "post")
+            .Include(p => p.User)
             .OrderBy(sorting)
             .Skip(skipCount)
             .Take(maxResultCount)
             .ToListAsync();
+        return ret;
     }
 
 

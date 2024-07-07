@@ -13,4 +13,5 @@ public interface IPostAppService : IApplicationService
     Task<PostDto> GetPostById(Guid postId);
     Task<PagedResultDto<PostDto>> GetListPosts(GetPostListDto input);
     Task<PostDto> CreatePost(CreatePostDto input);
+    Task<bool> DeleteAsync(Guid id);
 }
