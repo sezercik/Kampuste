@@ -51,6 +51,7 @@ public class EfCorePostRepository : EfCoreRepository<KampusDbContext, Post, Guid
                 !filter.IsNullOrWhiteSpace(),
                 p => p.Content.Contains(filter)
             )
+            .Where(p => p.PostType == "post")
             .OrderBy(sorting)
             .Skip(skipCount)
             .Take(maxResultCount)
