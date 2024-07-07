@@ -16,7 +16,7 @@ namespace Kampus.PostReplies
         protected PostReply() :base() { }
 
         public PostReply(Guid userId, string content, Guid repliedPostId, string[]? blobNames = null)
-        : base(userId,content,blobNames)
+        : base(userId,content,blobNames,"post_reply")
         {
             RepliedPostId = repliedPostId;
         }

@@ -16,7 +16,7 @@ namespace Kampus.PostQuotes
         protected PostQuote() : base() { }
 
         public PostQuote(Guid userId, string content, Guid quotedPostId, string[]? blobNames = null)
-            : base(userId,content,blobNames)
+            : base(userId,content,blobNames,"post_quote")
         {
             QuotedPostId = quotedPostId;
         }

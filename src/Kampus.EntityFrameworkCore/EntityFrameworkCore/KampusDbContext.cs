@@ -184,10 +184,27 @@ public class KampusDbContext :
                .HasForeignKey(p => p.PostId)
                .OnDelete(DeleteBehavior.NoAction);
 
-            b.Metadata.FindNavigation(nameof(Post.PostReplies)).SetPropertyAccessMode(PropertyAccessMode.Field);
-            b.Metadata.FindNavigation(nameof(Post.PostQuotes)).SetPropertyAccessMode(PropertyAccessMode.Field);
+            //b.HasDiscriminator<string>("post_type")
+            //.HasValue<Post>("post")
+            //.HasValue<PostQuote>("post_quote")
+            //.HasValue<PostReply>("post_reply");
+
+            //b.Metadata.FindNavigation(nameof(Post.PostReplies)).SetPropertyAccessMode(PropertyAccessMode.Field);
+            //b.Metadata.FindNavigation(nameof(Post.PostQuotes)).SetPropertyAccessMode(PropertyAccessMode.Field);
 
         });
+
+        builder.Entity<Post>()
+           .HasMany(p => p.PostReplies)
+           .WithOne(pr => pr.RepliedPost)
+           .HasForeignKey(pr => pr.RepliedPostId)
+           .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Post>()
+            .HasMany(p => p.PostQuotes)
+            .WithOne(pq => pq.QuotedPost)
+            .HasForeignKey(pq => pq.QuotedPostId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<PostLike>(b =>
         {

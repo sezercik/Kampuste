@@ -14,6 +14,7 @@ public class Post :  FullAuditedAggregateRoot<Guid>
     public virtual IdentityUser User { get; protected set; }
     
     public string Content { get; set; }
+    public string PostType { get; protected set; }
     public string[]? BlobNames { get; set; }
 
     public ICollection<PostLike> PostLikes { get; protected set; }
@@ -25,7 +26,7 @@ public class Post :  FullAuditedAggregateRoot<Guid>
     {
     }
 
-    public Post(Guid userId, string content,string[]? blobNames=null)
+    public Post(Guid userId, string content,string[]? blobNames=null,string postType = "post")
     {
         Id = Guid.NewGuid();
         UserId = userId;
@@ -34,5 +35,6 @@ public class Post :  FullAuditedAggregateRoot<Guid>
         PostLikes = new List<PostLike>();
         PostQuotes = new List<PostQuote>();
         PostReplies = new List<PostReply>();
+        PostType = postType;
     }
 }

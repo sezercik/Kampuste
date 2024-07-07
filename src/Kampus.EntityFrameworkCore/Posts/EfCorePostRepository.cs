@@ -25,13 +25,16 @@ public class EfCorePostRepository : EfCoreRepository<KampusDbContext, Post, Guid
 
     public async Task<List<Post>> GetListOfPosts(int skipCount, int maxResultCount, string sorting, string filter = null)
     {
-        //TODO: reply ve quotelarý almasýn
+        //TODO: fix all post quote and reply repository and services to adapt post type
         var dbSet = await GetDbSetAsync();
-        return await dbSet.WhereIf
+
+        return await dbSet
+            .WhereIf
             (
                 !filter.IsNullOrWhiteSpace(),
                 p => p.Content.Contains(filter)
             )
+            .Where(p => p.PostType == "post")
             .OrderBy(sorting)
             .Skip(skipCount)
             .Take(maxResultCount)

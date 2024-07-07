@@ -4,6 +4,7 @@ using Kampus.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Kampus.Migrations
 {
     [DbContext(typeof(KampusDbContext))]
-    partial class KampusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240706221621_Datas")]
+    partial class Datas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1419,7 +1422,7 @@ namespace Kampus.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(11)
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Local));
+                        .HasDefaultValue(new DateTime(2024, 7, 7, 0, 0, 0, 0, DateTimeKind.Local));
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -2495,13 +2498,8 @@ namespace Kampus.Migrations
                 {
                     b.HasBaseType("Kampus.Post");
 
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("QuotedPostId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("PostId");
 
                     b.HasIndex("QuotedPostId");
 
@@ -2512,13 +2510,8 @@ namespace Kampus.Migrations
                 {
                     b.HasBaseType("Kampus.Post");
 
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("RepliedPostId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("PostId");
 
                     b.HasIndex("RepliedPostId");
 
@@ -2801,12 +2794,8 @@ namespace Kampus.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Kampus.Post", null)
-                        .WithMany("PostQuotes")
-                        .HasForeignKey("PostId");
-
                     b.HasOne("Kampus.Post", "QuotedPost")
-                        .WithMany()
+                        .WithMany("PostQuotes")
                         .HasForeignKey("QuotedPostId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -2822,12 +2811,8 @@ namespace Kampus.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Kampus.Post", null)
-                        .WithMany("PostReplies")
-                        .HasForeignKey("PostId");
-
                     b.HasOne("Kampus.Post", "RepliedPost")
-                        .WithMany()
+                        .WithMany("PostReplies")
                         .HasForeignKey("RepliedPostId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

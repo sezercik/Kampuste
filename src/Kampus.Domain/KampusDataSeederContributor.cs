@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Guids;
 using Volo.Abp.Identity;
+using Volo.Abp.MultiTenancy;
 
 namespace Kampus;
 
@@ -22,10 +24,26 @@ public class KampusDataSeederContributor(
     {
         if (await postRepository.GetCountAsync() <= 0)
         {
-            Guid userId = Guid.Parse("6BFC1726-5DB5-D952-96C5-3A138AC0B4E4");
-            IdentityUser user = await _identityUserRepository.GetAsync(userId);
+            IdentityUser user = await _identityUserRepository.InsertAsync(
+                new IdentityUser(
+                    Guid.NewGuid(),
+                    "pezo",
+                    "pezkoraler@gmail.com",
+                   null
+                ));
+            Guid userId = user.Id;
 
-            Guid newUserId = Guid.Parse("14c1c583-0981-fc49-577c-3a138ac442cb");
+            //Guid userId = Guid.Parse("6FACEAD7-44C3-7291-17CB-3A139C395DFF");
+            //IdentityUser user = await _identityUserRepository.GetAsync(userId);
+
+            IdentityUser newUser = await _identityUserRepository.InsertAsync(
+                new IdentityUser(
+                    Guid.NewGuid(),
+                    "sezo",
+                    "szrakoraler@gmail.com",
+                   null
+                ));
+
             var firstPost = await postRepository.InsertAsync(
                 new Post(
                     userId,
@@ -47,7 +65,7 @@ public class KampusDataSeederContributor(
             if (await postQuoteRepository.GetCountAsync() <= 0)
             {
                 PostQuote firstQuote = new PostQuote(userId, "First quote for the first post", firstPost.Id, null);
-                PostQuote secondQuote = new PostQuote(newUserId, "Second quote for the first post", firstPost.Id, null);
+                PostQuote secondQuote = new PostQuote(newUser.Id, "Second quote for the first post", firstPost.Id, null);
 
                 await postQuoteRepository.InsertManyAsync([firstQuote, secondQuote], autoSave: true);
             }

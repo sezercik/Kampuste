@@ -1,5 +1,7 @@
 ﻿@page "/posts"
-@inject PostService PostService
+@using Services.Posts
+@using Kampus.Posts
+@inject IPostService PostService
 
 <h3>Posts</h3>
 
@@ -25,6 +27,5 @@ else
     protected override async Task OnInitializedAsync()
     {
         posts = await PostService.GetPostsAsync();
-        var claims = DenemeService.Foo();
     }
 }

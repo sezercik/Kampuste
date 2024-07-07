@@ -70,9 +70,7 @@ public class PostAppService : ApplicationService, IPostAppService
             input.Filter
         );
 
-        var totalCount = input.Filter == null
-            ? await _postRepository.CountAsync()
-            : await _postRepository.CountAsync(p => p.Content.Contains(input.Filter));
+        var totalCount = posts.Count;
         return new PagedResultDto<PostDto>(
             totalCount,
             ObjectMapper.Map<List<Post>,List<PostDto>>(posts)
