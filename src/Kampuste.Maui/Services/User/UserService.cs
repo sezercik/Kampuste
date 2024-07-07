@@ -3,13 +3,14 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Volo.Abp.Account;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Users;
 //using Kampuste.Maui.Services.User
 
 namespace Kampuste.Maui.Services.User
 {
-    public class UserService : ITransientDependency
+    public class UserService : IUserService, ITransientDependency
     {
         private readonly HttpClient _httpClient;
         private readonly ISecureStorage _storageService;
@@ -65,6 +66,67 @@ namespace Kampuste.Maui.Services.User
             }
 
             return false;
+        }
+
+        public async Task<List<CurrentUsersDetailsDto>> GetUserAsync(Guid Id)
+        {
+            var response = await _httpClient.GetAsync($"api/app/post/posts/{Id}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<CurrentUsersDetailsDto>>();
+        }
+
+        public async Task<CurrentUsersDetailsDto> PutUserAsync(Guid Id)
+        {
+            string query = $"api/identity/users/";
+            var response = await _httpClient.PutAsJsonAsync(query, Id);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<CurrentUsersDetailsDto>();
+        }
+
+        public async Task<List<CurrentUsersDetailsDto>> GetUserAsync(string filter, string sorting, int skipCount, int MaxResultCount)
+        {
+            var response = await _httpClient.GetAsync($"api/identity/users?Filter={filter}&Sorting={sorting}&SkipCount={skipCount}&MaxResultCount={MaxResultCount}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<CurrentUsersDetailsDto>>();
+        }
+
+        public async Task<CurrentUsersDetailsDto> PostUserAsync(CurrentUsersDetailsDto User)
+        {
+            string query = $"api/identity/users";
+            var response = await _httpClient.PostAsJsonAsync(query, User);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync< CurrentUsersDetailsDto > ();
+        }
+
+        public async Task<CurrentUsersDetailsDto> DeleteUserAsync(Guid Id)
+        {
+            string query = $"api/identity/users/{Id}";
+            var response = await _httpClient.DeleteAsync(query);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<CurrentUsersDetailsDto>();
+        }
+
+        public async Task<List<CurrentUsersDetailsDto>> GetUserRolesAsync(Guid Id)
+        {
+            string query = $"api/identity/users/{Id}/roles";
+            var response = await _httpClient.GetAsync(query);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<CurrentUsersDetailsDto>>();
+        }
+
+        public Task<List<CurrentUsersDetailsDto>> PutUserRolesAsync(Guid Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<CurrentUsersDetailsDto>> GetUserByUserNameAsync(string userName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<CurrentUsersDetailsDto>> GetUserByEmailAsync(string email)
+        {
+            throw new NotImplementedException();
         }
     }
 
