@@ -1,7 +1,69 @@
 ﻿@page "/posts"
-
+@using Kampus.Posts
+@using Kampus.Localization
+@using Volo.Abp.AspNetCore.Components.Web
+@inherits KampusComponentBase
+@inject IPostAppService PostAppService
+@inject AbpBlazorMessageLocalizerHelper<KampusResource> LH
+@using Volo.Abp.MultiTenancy
+@inject AuthenticationStateProvider AuthenticationStateProvider
 <h3>Posts</h3>
 
-@code {
+@if(CurrentUser.IsAuthenticated && CurrentUser.Roles.Any(p => p.Contains("admin"))){
 
+    <Card>
+        <CardHeader>
+            <Row Class="justify-content-between">
+                <Column ColumnSize="ColumnSize.IsAuto">
+                    <h2>@L["Posts"]</h2>
+                </Column>
+            </Row>
+        </CardHeader>
+        <CardBody>
+            <DataGrid TItem="PostDto"
+                      Data="PostList"
+                      ReadData="OnDataGridReadAsync"
+                      TotalItems="TotalCount"
+                      ShowPager="true"
+                      PageSize="PageSize">
+                <DataGridColumns>
+                    <DataGridColumn Width="150px"
+                                    TItem="PostDto"
+                                    Field="@nameof(PostDto.Id)"
+                                    Sortable="false"
+                                    Caption="@L["Actions"]">
+                        <DisplayTemplate>
+                            <Dropdown>
+                                <DropdownToggle Color="Color.Primary">
+                                    @L["Actions"]
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem Clicked="() => DeletePostAsync(context)">
+                                        @L["Delete"]
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </DisplayTemplate>
+                    </DataGridColumn>
+                    <DataGridColumn TItem="PostDto"
+                                    Field="@nameof(PostDto.Id)"
+                                    Caption="@L["Id"]"></DataGridColumn>
+                    <DataGridColumn TItem="PostDto"
+                                    Field="@nameof(PostDto.Content)"
+                                    Caption="@L["Content"]">
+                        <DisplayTemplate>
+                            @context.Id.ToString()
+                        </DisplayTemplate>
+                        <DisplayTemplate>
+                            @context.Content
+                        </DisplayTemplate>
+                    </DataGridColumn>
+                </DataGridColumns>
+            </DataGrid>
+        </CardBody>
+    </Card>
+}
+else
+{
+    <p>@L["MustLogIn"]</p>
 }

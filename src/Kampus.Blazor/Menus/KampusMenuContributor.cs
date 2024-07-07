@@ -71,12 +71,6 @@ public class KampusMenuContributor : IMenuContributor
                 icon: "fas fa-university"
             ).AddItem(
                 new ApplicationMenuItem(
-                    "Kampuste.Users",
-                    l["Menu:Users"],
-                    url: "/users"
-                    )
-                ).AddItem(
-                new ApplicationMenuItem(
                     "Kampuste.Posts",
                     l["Menu:Posts"],
                     url: "/posts"
