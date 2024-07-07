@@ -44,9 +44,12 @@ namespace Kampuste.Maui.Services.PostQuote
             return await response.Content.ReadFromJsonAsync<List<PostQuoteDto>>();
         }
 
-        public Task<List<PostQuoteDto>> PostPostQuoteAsync(PostQuoteDto postQuote)
+        public async Task<List<PostQuoteDto>> PostPostQuoteAsync(PostQuoteDto postQuote)
         {
-            throw new NotImplementedException();
+            string query = $"api/app/post-quote/post-quote";
+            var response = await _httpClient.PostAsJsonAsync(query, postQuote);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<PostQuoteDto>>();
         }
 
        
