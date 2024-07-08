@@ -95,6 +95,9 @@
 
             var quoteCount = await PostQuoteService.GetPostQuoteListAsync(post.Id, null, "content DESC", 0, 500);
             PostQuoteCount[PostList.IndexOf(post)] = quoteCount.TotalCount;
+
+            // Debugging log
+            Console.WriteLine($"Post: {post.Id}, CreationTime: {post.CreationTime}");
         }
     }
 
@@ -118,12 +121,11 @@
         if (index < PostLikeCount.Count)
         {
             var result = await PostLikeService.PostPostLikeAsync(postId);
-            if(result == true)
+            if (result == true)
             {
-                 PostLikeCount[index]++;
-                 StateHasChanged();
+                PostLikeCount[index]++;
+                StateHasChanged();
             }
-           
         }
         else
         {

@@ -1,4 +1,4 @@
-﻿@page "/paylas"
+﻿@* @page "/paylas"
 @inject NavigationManager Navigation
 
 <div class="content">
@@ -20,5 +20,45 @@
     private void AkisaGit()
     {
         Navigation.NavigateTo("/akis");
+    }
+} *@
+
+@page "/paylas"
+@using Kampus.Posts
+@using Kampuste.Maui.Services.Posts
+@inject NavigationManager Navigation
+@inject IPostService PostService
+
+<div class="content">
+    <div class="header">
+        <button class="back-button" @onclick="AkisaGit"><i class="fa fa-arrow-left"></i></button>
+        <button class="share-button" @onclick="Paylas">Paylaş</button>
+    </div>
+    <div class="share-form">
+        <textarea class="share-textarea" placeholder="Buraya yazın..." @bind="PostContent"></textarea>
+        
+    </div>
+</div>
+
+@code {
+    private string PostContent { get; set; }
+
+    private void AkisaGit()
+    {
+        Navigation.NavigateTo("/akis");
+    }
+
+    private async void Paylas()
+    {
+        var postDto = new PostDto
+            {
+                Content = PostContent,
+            };
+
+        var responsePost = await PostService.PostPostAsync(postDto);
+        if (responsePost != null)
+        {
+            AkisaGit();
+        }
     }
 }

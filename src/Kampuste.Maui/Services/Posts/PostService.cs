@@ -15,10 +15,11 @@ namespace Kampuste.Maui.Services.Posts
     public class PostService : ITransientDependency, IPostService
     {
         private readonly HttpClient _httpClient;
-
-        public PostService(HttpClient httpClient)
+        private readonly ISecureStorage _storageService;
+        public PostService(HttpClient httpClient, ISecureStorage storageService)
         {
             _httpClient = httpClient;
+            _storageService = storageService;
         }
 
         public async Task<List<PostDto>> GetPostsAsync()//https://smooth-tahr-perfectly.ngrok-free.app/api/app/post/posts
@@ -50,12 +51,26 @@ namespace Kampuste.Maui.Services.Posts
             var postResponse = await response.Content.ReadFromJsonAsync<PostResponse>();
             return postResponse.Items;
         }
-        
+
         public async Task<PostDto> PostPostAsync(PostDto post)
         {
+            var accessToken = await _storageService.GetAsync("AccessToken");
+
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                return null;
+            }
+
             string query = $"api/app/post/post";
-            var response = await _httpClient.PostAsJsonAsync(query, post);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, query)
+            {
+                Content = JsonContent.Create(post)
+            };
+            requestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+            var response = await _httpClient.SendAsync(requestMessage);
             response.EnsureSuccessStatusCode();
+
             return await response.Content.ReadFromJsonAsync<PostDto>();
         }
 
