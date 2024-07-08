@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.Internal.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
 
 namespace Kampus.Posts;
@@ -70,11 +72,20 @@ public class PostAppService : ApplicationService, IPostAppService
             input.Filter
         );
 
+        var postsDtos = posts.Select(post => new PostDto
+        {
+            Id = post.Id,
+            UserId = post.UserId,
+            UserName = post.User.UserName, 
+            Content = post.Content,
+        }).ToList();
         var totalCount = posts.Count;
-        return new PagedResultDto<PostDto>(
+        var ret = new PagedResultDto<PostDto>(
             totalCount,
-            ObjectMapper.Map<List<Post>,List<PostDto>>(posts)
+            postsDtos
         );
+        //ObjectMapper.Map<List<Post>, List<PostDto>>(postsDtos)
+        return ret;
     }
 
     [Authorize]

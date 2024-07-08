@@ -12,7 +12,7 @@ namespace Kampuste.Maui.Services.Posts
 {
     [Volo.Abp.DependencyInjection.Dependency(ReplaceServices = true)]
     [ExposeServices(typeof(IPostService))]
-    public class PostService : IPostService, ITransientDependency
+    public class PostService : ITransientDependency, IPostService
     {
         private readonly HttpClient _httpClient;
 
@@ -47,9 +47,10 @@ namespace Kampuste.Maui.Services.Posts
             string query = $"api/app/post/post-list-by-user-id?userId={userId}&Filter={filter}&Sorting={sorting}&SkipCount={skipCount}&MaxResultCount={MaxResultCount}";
             var response = await _httpClient.GetAsync(query);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<List<PostDto>>();
+            var postResponse = await response.Content.ReadFromJsonAsync<PostResponse>();
+            return postResponse.Items;
         }
-
+        
         public async Task<PostDto> PostPostAsync(PostDto post)
         {
             string query = $"api/app/post/post";
@@ -65,5 +66,11 @@ namespace Kampuste.Maui.Services.Posts
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<PostDto>();
         }
+    }
+
+    public class PostResponse
+    {
+        public int TotalCount { get; set; }
+        public List<PostDto> Items { get; set; }
     }
 }

@@ -25,6 +25,7 @@ namespace Kampus.PostQuotes
                     p => p.Content.Contains(filter)
                 )
                 .Where(p => p.QuotedPostId == quotedPostId)
+                .Include(p => p.User)
                 .OrderBy(sorting)
                 .Skip(skipCount)
                 .Take(maxResultCount)

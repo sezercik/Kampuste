@@ -5,11 +5,14 @@ using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
 
 namespace Kampuste.Maui.Services.PostReply
 {
-    internal class PostReplyService : IPostReplyService , ITransientDependency
+    [Volo.Abp.DependencyInjection.Dependency(ReplaceServices = true)]
+    [ExposeServices(typeof(IPostReplyService))]
+    public class PostReplyService : ITransientDependency, IPostReplyService
     {
         private readonly HttpClient _httpClient;
 
@@ -25,18 +28,18 @@ namespace Kampuste.Maui.Services.PostReply
             return await response.Content.ReadFromJsonAsync<List<PostReplyDto>>();
         }
 
-        public async Task<List<PostReplyDto>> GetPostreplyByIdAsync(Guid postRepliedId)
+        public async Task<List<PostReplyDto>> GetPostReplyByIdAsync(Guid postRepliedId)
         {
             var response = await _httpClient.GetAsync($"api/app/post-reply/post-reply-by-id/{postRepliedId}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<List<PostReplyDto>>();
         }
 
-        public async Task<List<PostReplyDto>> GetPostReplyListAsync(Guid postRepliedId, string filter, string sorting, int skipCount, int maxResultCount)
+        public async Task<PagedResultDto<PostReplyDto>> GetPostReplyListAsync(Guid postRepliedId, string filter, string sorting, int skipCount, int maxResultCount)
         {
             var response = await _httpClient.GetAsync($"api/app/post-reply/post-reply-list?RepliedPostId={postRepliedId}&Filter={filter}&Sorting={sorting}&SkipCount={skipCount}&MaxResultCount={maxResultCount}");
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<List<PostReplyDto>>();
+            return await response.Content.ReadFromJsonAsync<PagedResultDto<PostReplyDto>>();
         }
 
         public async Task<List<PostReplyDto>> PostPostReplyAsync(PostReplyDto postReply)

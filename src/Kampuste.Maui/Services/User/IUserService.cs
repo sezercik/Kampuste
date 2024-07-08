@@ -8,6 +8,8 @@ namespace Kampuste.Maui.Services.User
 {
     public interface IUserService
     {
+        Task<CurrentUsersDetailsDto> CurrentUserDetails();
+        Task<bool> CheckUserAuthenticationAsync();
         Task<List<CurrentUsersDetailsDto>> GetUserAsync(Guid Id);
         Task<CurrentUsersDetailsDto> PutUserAsync(Guid Id);
         Task<List<CurrentUsersDetailsDto>> GetUserAsync(string filter, string sorting, int skipCount, int MaxResultCount);

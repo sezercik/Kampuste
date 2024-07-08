@@ -20,6 +20,7 @@ public class EfCorePostRepository : EfCoreRepository<KampusDbContext, Post, Guid
     public async Task<Post> GetByIdAsync(Guid postId)
     {
         var dbSet = await GetDbSetAsync();
+
         return await dbSet.FirstOrDefaultAsync(p => p.Id == postId);
     }
 
@@ -53,6 +54,7 @@ public class EfCorePostRepository : EfCoreRepository<KampusDbContext, Post, Guid
                 p => p.Content.Contains(filter)
             )
             .Where(p => p.PostType == "post")
+            .Include(p => p.User)
             .OrderBy(sorting)
             .Skip(skipCount)
             .Take(maxResultCount)

@@ -5,7 +5,8 @@ namespace Kampus.Posts;
 
 public class PostDto : FullAuditedEntityDto<Guid>
 {
-    public virtual Guid UserId { get; protected set; }
+    public Guid UserId { get; set; }
     public string Content { get; set; }
+    public string UserName { get; set; }
     public string[]? BlobNames { get; set; }
 }

@@ -8,10 +8,14 @@ using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.DependencyInjection;
 
 namespace Kampuste.Maui.Services.PostQuote
 {
-    internal class PostQuoteService : IPostQuoteService
+    [Volo.Abp.DependencyInjection.Dependency(ReplaceServices = true)]
+    [ExposeServices(typeof(IPostQuoteService))]
+    public class PostQuoteService : ITransientDependency, IPostQuoteService
     {
         private readonly HttpClient _httpClient;
 
@@ -36,12 +40,12 @@ namespace Kampuste.Maui.Services.PostQuote
             return await response.Content.ReadFromJsonAsync<List<PostQuoteDto>>();
         }
 
-        public async Task<List<PostQuoteDto>> GetPostQuoteListAsync(Guid postQuoteId,string filter, string sorting, int skipCount, int maxResultCount)
+        public async Task<PagedResultDto<PostQuoteDto>> GetPostQuoteListAsync(Guid postQuoteId,string filter, string sorting, int skipCount, int maxResultCount)
         {
-            string query = $"api/app/post-quote/post-quote-list? QuotedPostId = {postQuoteId}&Filter= {filter} & Sorting = {sorting} & SkipCount = {skipCount} & MaxResultCount = {maxResultCount}";
+            string query = $"api/app/post-quote/post-quote-list?QuotedPostId={postQuoteId}&Filter={filter}&Sorting={sorting}&SkipCount={skipCount}&MaxResultCount={maxResultCount}";
             var response = await _httpClient.GetAsync(query);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<List<PostQuoteDto>>();
+            return await response.Content.ReadFromJsonAsync<PagedResultDto<PostQuoteDto>>();
         }
 
         public async Task<List<PostQuoteDto>> PostPostQuoteAsync(PostQuoteDto postQuote)

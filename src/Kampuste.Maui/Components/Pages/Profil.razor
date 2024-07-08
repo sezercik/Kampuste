@@ -1,5 +1,22 @@
 ﻿@page "/profil"
 @inject NavigationManager Navigation
+@using Services.User
+@inject IUserService UserService
+
+@using Kampus.Posts
+@using Kampus.PostsLikes
+@using Kampus.PostQuotes
+@using Kampus.PostReplies
+
+@using Services.Posts
+@using Services.PostLike
+@using Services.PostQuote
+@using Services.PostReply
+
+@inject IPostService PostService
+@inject IPostLikeService PostLikeService
+@inject IPostQuoteService PostQuoteService
+@inject IPostReplyService PostReplyService
 
 <div class="content">
     <!-- Üst Kısım: Geri Butonu ve Ayarlar İkonu -->
@@ -11,7 +28,7 @@
     <!-- Profil Bilgileri -->
     <div class="profile-info">
         <img src="https://via.placeholder.com/150" alt="Profil Fotoğrafı" class="profile-photo" />
-        <h2>Kullanıcı Adı</h2>
+        <h2>@detailedUserName</h2>
         <p class="bio">Bu bir bio örneğidir. Kısa bir açıklama buraya gelecek.</p>
     </div>
 
@@ -28,87 +45,91 @@
         {
             <div class="posts">
                 <!-- Kullanıcı Gönderisi -->
-                @foreach (var post in posts)
+                @if (PostCount > 0)
                 {
-                    <div class="post">
-                        <div class="post-header">
-                            <span class="username">@post.Username</span>
-                            <span class="post-date">@post.PostDate.ToString("dd MMMM yyyy")</span>
+                    @for (int i = 0; i < PostCount; i++)
+                    {
+                        var j = i;
+
+                        <div class="post">
+                            <div class="post-header">
+                                @* <img src="@PostList[i].UserId" alt="Profil Fotoğrafı" class="user-photo" /> *@
+                                <span class="username">@PostList[j].UserName</span>
+                                <span class="post-date">@PostList[j].CreationTime.ToString("dd MMMM yyyy")</span>
+                            </div>
+                            <div class="post-content">
+                                @*    @if (!string.IsNullOrEmpty(post.BlobNames))
+                    {
+                    <img src="@post.ImageUrl" alt="Resim" />
+                    }  *@
+                                <p>@PostList[j].Content</p>
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-button" @onclick="@(() => LikePost(PostList[j].Id, j))">
+                                    <i class="fa fa-thumbs-up" aria-hidden="true">@GetListValue(PostLikeCount, j)</i>
+                                </button>
+                                <button class="action-button">
+                                    <i class="fa fa-comment" aria-hidden="true">@GetListValue(PostReplyCount, j)</i>
+                                </button>
+                                <button class="action-button">
+                                    <i class="fa fa-quote-left" aria-hidden="true">@GetListValue(PostQuoteCount, j)</i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="post-content">
-                            @if (!string.IsNullOrEmpty(post.ImageUrl))
-                            {
-                                <img src="@post.ImageUrl" alt="Resim" />
-                            }
-                            <p>@post.Content</p>
-                        </div>
-                        <div class="post-actions">
-                            <button class="action-button"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                            <button class="action-button"><i class="fa fa-comment" aria-hidden="true"></i></button>
-                            <button class="action-button"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
+                    }
                 }
             </div>
         }
-        else if (showMedia)
-        {
-            <div class="posts">
-                <!-- Kullanıcı Gönderisi -->
-                @foreach (var post in posts)
-                {
-                    <div class="post">
-                        <div class="post-header">
-                            <span class="username">@post.Username</span>
-                            <span class="post-date">@post.PostDate.ToString("dd MMMM yyyy")</span>
-                        </div>
-                        <div class="post-content">
-                            @if (!string.IsNullOrEmpty(post.ImageUrl))
-                            {
-                                <img src="@post.ImageUrl" alt="Resim" />
-                            }
-                            <p>@post.Content</p>
-                        </div>
-                        <div class="post-actions">
-                            <button class="action-button"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                            <button class="action-button"><i class="fa fa-comment" aria-hidden="true"></i></button>
-                            <button class="action-button"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-        else if (showPins)
-        {
-            <div class="posts">
-                <!-- Kullanıcı Gönderisi -->
-                @foreach (var post in posts)
-                {
-                    <div class="post">
-                        <div class="post-header">
-                            <span class="username">@post.Username</span>
-                            <span class="post-date">@post.PostDate.ToString("dd MMMM yyyy")</span>
-                        </div>
-                        <div class="post-content">
-                            @if (!string.IsNullOrEmpty(post.ImageUrl))
-                            {
-                                <img src="@post.ImageUrl" alt="Resim" />
-                            }
-                            <p>@post.Content</p>
-                        </div>
-                        <div class="post-actions">
-                            <button class="action-button"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                            <button class="action-button"><i class="fa fa-comment" aria-hidden="true"></i></button>
-                            <button class="action-button"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
+       
     </div>
 </div>
 
 @code {
+    public string detailedUserName = "";
+    private List<PostDto> PostList = new();
+    private int PostCount = 0;
+    private List<int> PostLikeCount = new();
+    private List<long> PostReplyCount = new();
+    private List<long> PostQuoteCount = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (await UserService.CheckUserAuthenticationAsync() == false)
+        {
+            Navigation.NavigateTo("/signin");
+        }
+        else
+        {
+            var detailedUser = await UserService.CurrentUserDetails();
+            detailedUserName = detailedUser.UserName ?? "hata";
+
+            PostList = await PostService.GetPostListByUserIDAsync(detailedUser.Id ?? Guid.Empty,null,"CreationTime ASC",0,500);
+            PostCount = PostList.Count;
+
+            // Initialize counts with default values
+            for (int i = 0; i < PostCount; i++)
+            {
+                PostLikeCount.Add(0);
+                PostReplyCount.Add(0);
+                PostQuoteCount.Add(0);
+            }
+
+            foreach (var post in PostList)
+            {
+                var likeCount = await PostLikeService.GetLikeCountByPostIdAsync(post.Id);
+                PostLikeCount[PostList.IndexOf(post)] = likeCount;
+
+                var replyCount = await PostReplyService.GetPostReplyListAsync(post.Id, null, "content DESC", 0, 500);
+                PostReplyCount[PostList.IndexOf(post)] = replyCount.TotalCount;
+
+                var quoteCount = await PostQuoteService.GetPostQuoteListAsync(post.Id, null, "content DESC", 0, 500);
+                PostQuoteCount[PostList.IndexOf(post)] = quoteCount.TotalCount;
+            }
+        }
+    }
+
+    
     private bool showPosts = true;
     private bool showMedia = false;
     private bool showPins = false;
@@ -144,18 +165,28 @@
         Navigation.NavigateTo("/ayarlar");
     }
 
-    private List<Post> posts = new List<Post>
-    {
-        new Post { Username = "Kullanıcı Adı", PostDate = DateTime.Now.AddDays(-3), Content = "Bu bir gönderi örneğidir. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
-        new Post { Username = "Kullanıcı Adı", PostDate = DateTime.Now.AddDays(-2), Content = "Bu bir resimli gönderi örneğidir. Lorem ipsum dolor sit amet, consectetur adipiscing elit.", ImageUrl = "https://via.placeholder.com/200" },
-        new Post { Username = "Kullanıcı Adı", PostDate = DateTime.Now.AddDays(-1), Content = "Bu bir resimli gönderi örneğidir. Lorem ipsum dolor sit amet, consectetur adipiscing elit.", ImageUrl = "https://via.placeholder.com/200" },
-    };
+   
 
-    public class Post
+    private T GetListValue<T>(List<T> list, int index)
     {
-        public string Username { get; set; }
-        public DateTime PostDate { get; set; }
-        public string Content { get; set; }
-        public string ImageUrl { get; set; }
+        return index < list.Count ? list[index] : default;
+    }
+
+    private async Task LikePost(Guid postId, int index)
+    {
+        if (index < PostLikeCount.Count)
+        {
+            var result = await PostLikeService.PostPostLikeAsync(postId);
+            if (result == true)
+            {
+                PostLikeCount[index]++;
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            // Handle the case where the index is out of range
+            Console.WriteLine($"Index out of range: {index}");
+        }
     }
 }

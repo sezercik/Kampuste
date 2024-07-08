@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Kampuste.Maui.Services.PostLike
 {
-    public interface  IPostLikeSevice
+    public interface  IPostLikeService
     {
-        Task<List<PostLikeDto>> PostPostLikeAsync(Guid postId);
+        Task<bool> PostPostLikeAsync(Guid postId);
         Task<List<PostLikeDto>> DeletePostLikeAsync(Guid postId);
-        Task<List<PostLikeDto>> GetLikeCountByPostIdAsync(Guid postId);
+        Task<int> GetLikeCountByPostIdAsync(Guid postId);
         Task<List<PostLikeDto>> GetLikeCountByUserIdAsync(Guid UserId);
         Task<List<PostLikeDto>> GetLikeListByPostIdAsync(Guid postId);
         Task<List<PostLikeDto>> GetLikeListByUserIdAsync(Guid UserId);

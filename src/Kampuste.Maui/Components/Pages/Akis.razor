@@ -1,8 +1,21 @@
 ﻿@page "/akis"
+
 @using Kampus.Posts
-@using Kampuste.Maui.Services.Posts
+@using Kampus.PostsLikes
+@using Kampus.PostQuotes
+@using Kampus.PostReplies
+
+@using Services.Posts
+@using Services.PostLike
+@using Services.PostQuote
+@using Services.PostReply
+
 @inject NavigationManager Navigation
+
 @inject IPostService PostService
+@inject IPostLikeService PostLikeService
+@inject IPostQuoteService PostQuoteService
+@inject IPostReplyService PostReplyService
 
 <div class="content">
     <div class="tab-bar2">
@@ -14,39 +27,75 @@
     </div>
     <div>
         <div class="posts">
-        <!-- Kullanıcı Gönderisi -->
-             @foreach (var post in postsdto)
+            <!-- Kullanıcı Gönderisi -->
+            @if (PostCount > 0)
             {
-                <div class="post">
-                    <div class="post-header">
-                        <img src="@post.UserId" alt="Profil Fotoğrafı" class="user-photo" />
-                        <span class="username">@post.UserId</span>
-                        <span class="post-date">@post.CreationTime.ToString("dd MMMM yyyy")</span>
+                @for (int i = 0; i < PostCount; i++)
+                {
+                    var j = i;
+
+                    <div class="post">
+                        <div class="post-header">
+                            @* <img src="@PostList[i].UserId" alt="Profil Fotoğrafı" class="user-photo" /> *@
+                            <span class="username">@PostList[j].UserName</span>
+                            <span class="post-date">@PostList[j].CreationTime.ToString("dd MMMM yyyy")</span>
+                        </div>
+                        <div class="post-content">
+                            @*    @if (!string.IsNullOrEmpty(post.BlobNames))
+                    {
+                    <img src="@post.ImageUrl" alt="Resim" />
+                    }  *@
+                            <p>@PostList[j].Content</p>
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-button" @onclick="@(() => LikePost(PostList[j].Id, j))">
+                                <i class="fa fa-thumbs-up" aria-hidden="true">@GetListValue(PostLikeCount, j)</i>
+                            </button>
+                            <button class="action-button">
+                                <i class="fa fa-comment" aria-hidden="true">@GetListValue(PostReplyCount, j)</i>
+                            </button>
+                            <button class="action-button">
+                                <i class="fa fa-quote-left" aria-hidden="true">@GetListValue(PostQuoteCount, j)</i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="post-content">
-                      @*  @if (!string.IsNullOrEmpty(post.))
-                        {
-                            <img src="@post.ImageUrl" alt="Resim" />
-                        }  *@
-                        <p>@post.Content</p>
-                    </div>
-                    <div class="post-actions">
-                        <button class="action-button"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-                        <button class="action-button"><i class="fa fa-comment" aria-hidden="true"></i></button>
-                        <button class="action-button"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
-                    </div>
-                </div>
-                    }
+                }
+            }
         </div>
     </div>
 </div>
 
 @code {
-    
-    private List<PostDto> postsdto = new();
+    private List<PostDto> PostList = new();
+    private int PostCount = 0;
+    private List<int> PostLikeCount = new();
+    private List<long> PostReplyCount = new();
+    private List<long> PostQuoteCount = new();
+
     protected override async Task OnInitializedAsync()
     {
-        postsdto = await PostService.GetPostsAsync();
+        PostList = await PostService.GetPostsAsync();
+        PostCount = PostList.Count;
+
+        // Initialize counts with default values
+        for (int i = 0; i < PostCount; i++)
+        {
+            PostLikeCount.Add(0);
+            PostReplyCount.Add(0);
+            PostQuoteCount.Add(0);
+        }
+
+        foreach (var post in PostList)
+        {
+            var likeCount = await PostLikeService.GetLikeCountByPostIdAsync(post.Id);
+            PostLikeCount[PostList.IndexOf(post)] = likeCount;
+
+            var replyCount = await PostReplyService.GetPostReplyListAsync(post.Id, null, "content DESC", 0, 500);
+            PostReplyCount[PostList.IndexOf(post)] = replyCount.TotalCount;
+
+            var quoteCount = await PostQuoteService.GetPostQuoteListAsync(post.Id, null, "content DESC", 0, 500);
+            PostQuoteCount[PostList.IndexOf(post)] = quoteCount.TotalCount;
+        }
     }
 
     private void ProfileGit()
@@ -57,5 +106,29 @@
     private void MesajlaraGit()
     {
         Navigation.NavigateTo("/mesaj");
+    }
+
+    private T GetListValue<T>(List<T> list, int index)
+    {
+        return index < list.Count ? list[index] : default;
+    }
+
+    private async Task LikePost(Guid postId, int index)
+    {
+        if (index < PostLikeCount.Count)
+        {
+            var result = await PostLikeService.PostPostLikeAsync(postId);
+            if(result == true)
+            {
+                 PostLikeCount[index]++;
+                 StateHasChanged();
+            }
+           
+        }
+        else
+        {
+            // Handle the case where the index is out of range
+            Console.WriteLine($"Index out of range: {index}");
+        }
     }
 }
